@@ -8,18 +8,20 @@ import eastGate from "../resources/east-gate.jpg";
 import southWestGate from "../resources/south-west-gate.jpg";
 import southGate from "../resources/south-gate.jpg";
 import southEastGate from "../resources/south-east-gate.jpg";
+import fullMap from "../resources/full-map.jpg";
 
 export default class MapList extends Component {
 
 	constructor(props) {
 		super(props);
+		this.fullMap = {alt: "Full Map", src: fullMap};
 		this.list = [
 			{alt: "North West Gate", src: northWestGate},
 			{alt: "North Gate", src: northGate},
 			{alt: "North Est Gate", src: northEastGate},
-			{alt: "Est Gate", src: eastGate},
-			{alt: "Central Gate", src: centralGate},
 			{alt: "West Gate", src: westGate},
+			{alt: "Central Gate", src: centralGate},
+			{alt: "Est Gate", src: eastGate},
 			{alt: "South West Gate", src: southWestGate},
 			{alt: "South Gate", src: southGate},
 			{alt: "South East Gate", src: southEastGate}
@@ -28,13 +30,19 @@ export default class MapList extends Component {
 
 	render() {
 		return (
-			<ul>
-				{this.list.map((item, index) =>
-					<li key={index} onClick={() => this.props.onMapSelected(item)}>
-						<img id={`map-${index}`} alt={item.alt} src={item.src}/>
+			<div>
+				<ul>
+					<li onClick={() => this.props.onMapSelected(this.fullMap)}>
+						<img alt={this.fullMap.alt} src={this.fullMap.src}/>
 					</li>
-				)}
-			</ul>
+				</ul>
+				<ul>
+					{this.list.map((item, index) =>
+						<li key={index} onClick={() => this.props.onMapSelected(item)}>
+							<img id={`map-${index}`} alt={item.alt} src={item.src}/>
+						</li>
+					)}
+				</ul></div>
 		)
 	}
 }
