@@ -40,27 +40,26 @@ export default class Login extends Component {
 	logout(e) {
 		this.logger.log("Logging out");
 		this.setState({isAuth: false});
+		this.props.onLogoutSuccess && this.props.onLogoutSuccess()
 	}
 
 	render() {
 		const {username, password, isAuth} = this.state;
 		if (isAuth) {
 			return (
-				<div className={"component-login"}>
+				<div className={"component-login user-login"}>
 					<button onClick={this.logout}>Logout</button>
 				</div>
 			)
 		}
 		return (
-			<div className={"component-login"}>
+			<div className={"component-login user-logout"}>
 				<form onSubmit={this.onSubmit}>
 					<label>
-						<span>Username</span>
-						<input value={username} onChange={e => this.setState({username: e.target.value})}/>
+						<input placeholder={"Username"} value={username} onChange={e => this.setState({username: e.target.value})}/>
 					</label>
 					<label>
-						<span>Password</span>
-						<input value={password} onChange={e => this.setState({password: e.target.value})}/>
+						<input placeholder={"Password"} value={password} onChange={e => this.setState({password: e.target.value})}/>
 					</label>
 					<input type={"submit"} value={"Login"}/>
 				</form>

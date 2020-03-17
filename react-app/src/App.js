@@ -19,6 +19,7 @@ export default class App extends Component {
 		};
 		this.socket = io.connect();
 		this.onLoginSuccess = this.onLoginSuccess.bind(this);
+		this.onLogoutSuccess = this.onLogoutSuccess.bind(this);
 		this.onMapSelected = this.onMapSelected.bind(this);
 	}
 
@@ -33,6 +34,10 @@ export default class App extends Component {
 		this.setState({authType: data})
 	}
 
+	onLogoutSuccess() {
+		this.setState({authType: null})
+	}
+
 	onMapSelected(map) {
 		this.setState({sourceImage: map.src})
 	}
@@ -41,7 +46,7 @@ export default class App extends Component {
 		const {sourceImage, remoteImage, authType} = this.state;
 		return (
 			<div className="App">
-				<Login onLoginSuccess={this.onLoginSuccess}/>
+				<Login onLoginSuccess={this.onLoginSuccess} onLogoutSuccess={this.onLogoutSuccess}/>
 				{authType === "master" ?
 					<div className={"master-tools"}>
 						{sourceImage ? <MapLayer image={sourceImage} socket={this.socket}/> : null}

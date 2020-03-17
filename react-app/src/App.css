@@ -28,3 +28,27 @@ body {
 .master-tools .map {
   position: relative;
 }
+
+.component-login.user-logout {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+}
+
+.component-login form {
+  display: flex;
+  flex-direction: column;
+}
+
+.component-login label {
+  margin: 5px 0
+}
+
+.component-login input {
+  font-size: 22px;
+}
+
+.component-login [type="submit"] {
+  padding: 10px;
+}

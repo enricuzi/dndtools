@@ -33,9 +33,9 @@ app.use(express.json());
 app.post('/login', (req, res) => {
 	const {username, password} = req.body;
 	console.log("Authenticating...", username, password);
-	if (username === "master" && password === "enrico") {
+	if (username.toLowerCase() === "master" && password.toLowerCase() === "enrico") {
 		res.status(200).send("master");
-	} else if (username === "player" && password === "tormund") {
+	} else if (username.toLowerCase() === "player" && password.toLowerCase() === "tormund") {
 		res.status(200).send("player");
 	} else {
 		res.send(401);
