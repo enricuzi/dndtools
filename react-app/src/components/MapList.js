@@ -32,17 +32,14 @@ export default class MapList extends Component {
 		return (
 			<div>
 				<ul>
-					<li onClick={() => this.props.onMapSelected(this.fullMap)}>
-						<img alt={this.fullMap.alt} src={this.fullMap.src}/>
-					</li>
-				</ul>
-				<ul>
 					{this.list.map((item, index) =>
 						<li key={index} onClick={() => this.props.onMapSelected(item)}>
 							<img id={`map-${index}`} alt={item.alt} src={item.src}/>
 						</li>
 					)}
-				</ul></div>
+				</ul>
+				<img alt={this.fullMap.alt} src={this.fullMap.src}/>
+			</div>
 		)
 	}
 }

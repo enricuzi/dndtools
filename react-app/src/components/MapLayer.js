@@ -7,8 +7,8 @@ export default class MapLayer extends Component {
 	constructor(props) {
 		super(props);
 		this.logger = new Logger("MapLayer");
-		this.r1 = 50;
-		this.r2 = 150;
+		this.r1 = 30;
+		this.r2 = 100;
 		this.density = .4;
 		this.overlay = 'rgba( 0, 0, 0, 1 )';
 		this.baseMapImage = null;
@@ -18,6 +18,7 @@ export default class MapLayer extends Component {
 		this.onMouseUp = this.onMouseUp.bind(this);
 		this.getDataImage = this.getDataImage.bind(this);
 		this.onImageLoad = this.onImageLoad.bind(this);
+		this.restoreFog = this.restoreFog.bind(this);
 	}
 
 	componentDidMount() {
@@ -36,7 +37,7 @@ export default class MapLayer extends Component {
 			const event = new MouseEvent("mouseup", {});
 			this.onMouseUp(event);
 		}, false);
-		this.canvasFog.addEventListener("touchmove",  e => {
+		this.canvasFog.addEventListener("touchmove", e => {
 			const touch = e.touches[0];
 			const event = new MouseEvent("mousemove", {
 				clientX: touch.clientX,
@@ -62,29 +63,34 @@ export default class MapLayer extends Component {
 		this.contextFog.fillRect(0, 0, width, height);
 		// set up our "eraser"
 		this.contextFog.globalCompositeOperation = 'destination-out';
+
+		this.restoreCanvas = document.createElement("canvas");
+		this.restoreCanvas.width = width;
+		this.restoreCanvas.height = height;
+		this.restoreContext = this.restoreCanvas.getContext("2d");
+		this.restoreContext.drawImage(this.canvasFog, 0, 0);
+	}
+
+	restoreFog() {
+		this.contextFog.globalCompositeOperation = "source-over";
+		this.contextFog.drawImage(this.restoreCanvas, 0, 0);
+		this.contextFog.globalCompositeOperation = "destination-out";
 	}
 
 	onMouseDown(e) {
 		e.preventDefault();
-		this.isRemoveFog = true
+		this.isRemoveFog = true;
 	}
 
 	onMouseUp(e) {
 		e.preventDefault();
 		this.isRemoveFog = false;
-		const image = this.getDataImage();
-		this.logger.log(image);
-		this.props.socket.emit("upload", image);
-	}
-
-	getDataImage() {
-		const canvasPrint = document.createElement("canvas");
-		canvasPrint.width = this.canvasFog.width;
-		canvasPrint.height = this.canvasFog.height;
-		const contextPrint = canvasPrint.getContext("2d");
-		contextPrint.drawImage(this.baseMapImage, 0, 0);
-		contextPrint.drawImage(this.canvasFog, 0, 0);
-		return canvasPrint.toDataURL('image/png');
+		if (window.confirm("Send?")) {
+			const image = this.getDataImage();
+			this.props.socket.emit("upload", image);
+		} else {
+			this.restoreFog();
+		}
 	}
 
 	onMouseMove(e) {
@@ -107,6 +113,18 @@ export default class MapLayer extends Component {
 		radGrd.addColorStop(this.density, 'rgba( 0, 0, 0, .1 )');
 		radGrd.addColorStop(1, 'rgba( 0, 0, 0,  0 )');
 		return radGrd;
+	}
+
+	getDataImage() {
+		const canvasPrint = document.createElement("canvas");
+		canvasPrint.width = this.canvasFog.width;
+		canvasPrint.height = this.canvasFog.height;
+		const contextPrint = canvasPrint.getContext("2d");
+		contextPrint.drawImage(this.baseMapImage, 0, 0, this.baseMapImage.width, this.baseMapImage.height,
+							0, 0, this.canvasFog.width, this.canvasFog.height);
+		contextPrint.drawImage(this.canvasFog, 0, 0);
+		this.restoreContext.drawImage(canvasPrint, 0, 0);
+		return canvasPrint.toDataURL('image/png');
 	}
 
 	onImageLoad(image) {
