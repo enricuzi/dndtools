@@ -1,26 +1,54 @@
-import React from 'react';
-import logo from './logo.svg';
+import React, {Component} from 'react';
 import './App.css';
+import MapLayer from "./components/MapLayer";
+import io from 'socket.io-client';
+import Login from "./components/Login";
+import Logger from "./Logger";
+import MapList from "./components/MapList";
 
-function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+export default class App extends Component {
+
+	constructor(props) {
+		super(props);
+		this.logger = new Logger("App");
+		this.state = {
+			sourceImage: null,
+			image: null,
+			remote: null,
+			authType: "master"
+		};
+		this.socket = io.connect();
+		this.onLoginSuccess = this.onLoginSuccess.bind(this);
+		this.onMapSelected = this.onMapSelected.bind(this);
+	}
+
+	componentDidMount() {
+		this.socket.on("image", data => {
+			this.logger.log("Received event 'image'", data);
+			this.setState({remoteImage: data})
+		});
+	}
+
+	onLoginSuccess(data) {
+		this.setState({authType: data})
+	}
+
+	onMapSelected(map) {
+		this.setState({sourceImage: map.src})
+	}
+
+	render() {
+		const {sourceImage, remoteImage, authType} = this.state;
+		return (
+			<div className="App">
+				<Login onLoginSuccess={this.onLoginSuccess}/>
+				{authType === "master" ?
+					<div className={"master-tools"}>
+						{sourceImage ? <MapLayer image={sourceImage} socket={this.socket}/> : null}
+						<MapList  onMapSelected={this.onMapSelected}/>
+					</div> : null}
+				{authType === "player" ? <img alt={"Loading map..."} src={remoteImage}/> : null}
+			</div>
+		);
+	}
 }
-
-export default App;
