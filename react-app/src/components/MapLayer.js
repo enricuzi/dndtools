@@ -42,9 +42,9 @@ export default class MapLayer extends Component {
 	onMouseUp(e) {
 		e.preventDefault();
 		this.isRemoveFog = false;
-		// const image = this.getDataImage();
-		// this.logger.log(image);
-		// this.props.socket.emit("upload", image);
+		const image = this.getDataImage();
+		this.logger.log(image);
+		this.props.socket.emit("upload", image);
 	}
 
 	getDataImage() {
