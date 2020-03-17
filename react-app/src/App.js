@@ -6,6 +6,7 @@ import Login from "./components/Login";
 import Logger from "./Logger";
 import MapList from "./components/MapList";
 import Storage from "./Storage";
+import Spinner from "./components/Spinner";
 
 export default class App extends Component {
 
@@ -55,7 +56,7 @@ export default class App extends Component {
 						{sourceImage ? <MapLayer image={sourceImage} socket={this.socket}/> : null}
 						<MapList  onMapSelected={this.onMapSelected}/>
 					</div> : null}
-				{auth === "player" ? <img alt={"Loading map..."} src={remoteImage}/> : null}
+				{auth === "player" ? remoteImage ? <img alt={"Loading map..."} src={remoteImage}/> : <Spinner/> : null}
 			</div>
 		);
 	}
