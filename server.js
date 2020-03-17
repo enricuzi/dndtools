@@ -31,7 +31,9 @@ app.use(express.json());
 
 // Access the parse results as request.body
 app.post('/login', (req, res) => {
-	const {username, password} = req.body;
+	let {username, password} = req.body;
+	username = username.trim();
+	password = password.trim();
 	console.log("Authenticating...", username, password);
 	if (username.toLowerCase() === "master" && password.toLowerCase() === "enrico") {
 		res.status(200).send("master");

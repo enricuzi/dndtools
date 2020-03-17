@@ -3,15 +3,13 @@ import Logger from "../Logger";
 
 export default class Login extends Component {
 
-	state = {
-		username: "",
-		password: "",
-		isAuth: false
-	};
-
 	constructor(props) {
 		super(props);
 		this.logger = new Logger("Login");
+		this.state = {
+			username: "",
+			password: ""
+		};
 		this.onSubmit = this.onSubmit.bind(this);
 		this.logout = this.logout.bind(this);
 	}
@@ -32,20 +30,19 @@ export default class Login extends Component {
 			return ""
 		}).then(data => {
 			this.logger.log(data);
-			this.setState({isAuth: !!data});
 			this.props.onLoginSuccess && this.props.onLoginSuccess(data);
 		});
 	}
 
 	logout(e) {
 		this.logger.log("Logging out");
-		this.setState({isAuth: false});
 		this.props.onLogoutSuccess && this.props.onLogoutSuccess()
 	}
 
 	render() {
-		const {username, password, isAuth} = this.state;
-		if (isAuth) {
+		const {username, password} = this.state;
+		const {auth} = this.props;
+		if (auth) {
 			return (
 				<div className={"component-login user-login"}>
 					<button onClick={this.logout}>Logout</button>
