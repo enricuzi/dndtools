@@ -1,0 +1,20 @@
+{
+  "name": "fogofwar",
+  "version": "1.0.0",
+  "main": "script.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node server.js"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "compression": "^1.7.4",
+    "serve-favicon": "^2.5.0",
+    "socket.io": "^2.3.0",
+    "express": "latest"
+  },
+  "devDependencies": {
+  },
+  "description": ""
+}

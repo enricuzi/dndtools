@@ -1,0 +1,61 @@
+const express = require('express');
+const path = require('path');
+const fs = require('fs');
+const http = require('http');
+const https = require('https');
+const sio = require('socket.io');
+const favicon = require('serve-favicon');
+const compression = require('compression');
+
+const app = express(),
+	options = {
+		key: fs.readFileSync(__dirname + '/rtc-video-room-key.pem'),
+		cert: fs.readFileSync(__dirname + '/rtc-video-room-cert.pem')
+	},
+	port = process.env.PORT || 3000,
+	server = process.env.NODE_ENV === 'production' ?
+		http.createServer(app).listen(port, () => console.log("Server started on port", port)) :
+		https.createServer(options, app).listen(port, () => console.log("Server started on port", port)),
+	io = sio(server);
+
+// compress all requests
+app.use(compression());
+
+app.use(express.static(path.join(__dirname, 'react-app/build')));
+
+// Parse URL-encoded bodies (as sent by HTML forms)
+app.use(express.urlencoded());
+
+// Parse JSON bodies (as sent by API clients)
+app.use(express.json());
+
+// Access the parse results as request.body
+app.post('/login', (req, res) => {
+	const {username, password} = req.body;
+	console.log("Authenticating...", username, password);
+	if (username === "master" && password === "enrico") {
+		res.status(200).send("master");
+	} else if (username === "player" && password === "tormund") {
+		res.status(200).send("player");
+	} else {
+		res.send(401);
+	}
+});
+
+app.use((req, res) => res.sendFile(__dirname + '/dist/index.html'));
+
+app.use(favicon('./react-app/build/favicon.ico'));
+
+// Switch off the default 'X-Powered-By: Express' header
+app.disable('x-powered-by');
+
+let room = 'party';
+io.sockets.on("connection", socket => {
+
+	socket.join(room);
+
+	socket.on("upload", data => {
+		console.log("Sending image to room", room);
+		socket.broadcast.to(room).emit('image', data);
+	});
+});

@@ -1,0 +1,21 @@
+body {
+	margin: 0;
+	overflow-x: hidden;
+}
+
+img {
+	width: 100%
+}
+
+canvas {
+	position: absolute;
+	top: 0;
+	left: 0;
+	z-index: 100;
+}
+
+footer {
+	position: fixed;
+	bottom: 0;
+	left: 0;
+}
