@@ -1,0 +1,30 @@
+.component-login.user-logout {
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	height: 100vh;
+}
+
+.component-login form {
+	display: flex;
+	flex-direction: column;
+}
+
+.component-login label {
+	margin: 5px 0
+}
+
+.component-login input {
+	font-size: 22px;
+	padding: 4px;
+}
+
+.component-login [type="submit"],
+.component-login button {
+	padding: 10px;
+}
+
+.component-login.user-login {
+	display: flex;
+	justify-content: flex-end;
+}

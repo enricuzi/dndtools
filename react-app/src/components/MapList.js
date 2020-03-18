@@ -9,6 +9,7 @@ import southWestGate from "../resources/south-west-gate.jpg";
 import southGate from "../resources/south-gate.jpg";
 import southEastGate from "../resources/south-east-gate.jpg";
 import fullMap from "../resources/full-map.jpg";
+import "./MapList.css";
 
 export default class MapList extends Component {
 
@@ -30,7 +31,7 @@ export default class MapList extends Component {
 
 	render() {
 		return (
-			<div>
+			<div className={"map-list"}>
 				<ul>
 					{this.list.map((item, index) =>
 						<li key={index} onClick={() => this.props.onMapSelected(item)}>

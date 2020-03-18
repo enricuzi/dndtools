@@ -1,0 +1,16 @@
+.map-list ul {
+	list-style: none;
+	margin: 0;
+	padding: 0;
+	display: flex;
+	flex-wrap: wrap;
+}
+
+.map-list li {
+	max-width: 30%;
+	margin: 1px;
+}
+
+.map-list img {
+	width: 100%;
+}

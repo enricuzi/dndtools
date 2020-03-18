@@ -1,0 +1,19 @@
+.map-layer {
+	position: relative;
+}
+
+.map-layer .actions {
+	display: flex;
+	justify-content: center;
+	align-items: center;
+}
+
+.map-layer button {
+	padding: 10px;
+}
+
+.map-layer #canvas-fog {
+	position: absolute;
+	top: 0;
+	left: 0;
+}

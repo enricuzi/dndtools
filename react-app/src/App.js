@@ -15,6 +15,7 @@ export default class App extends Component {
 		this.logger = new Logger("App");
 		this.state = {
 			sourceImage: null,
+			sourceAlt: null,
 			image: null,
 			remote: null,
 			auth: Storage.getItem("auth")
@@ -43,17 +44,17 @@ export default class App extends Component {
 	}
 
 	onMapSelected(map) {
-		this.setState({sourceImage: map.src})
+		this.setState({sourceImage: map.src, sourceAlt: map.alt})
 	}
 
 	render() {
-		const {sourceImage, remoteImage, auth} = this.state;
+		const {sourceImage, sourceAlt, remoteImage, auth} = this.state;
 		return (
 			<div className="App">
 				<Login auth={auth} onLoginSuccess={this.onLoginSuccess} onLogoutSuccess={this.onLogoutSuccess}/>
 				{auth === "master" ?
 					<div className={"master-tools"}>
-						{sourceImage ? <MapLayer image={sourceImage} socket={this.socket}/> : null}
+						{sourceImage ? <MapLayer image={sourceImage} alt={sourceAlt} socket={this.socket}/> : null}
 						<MapList  onMapSelected={this.onMapSelected}/>
 					</div> : null}
 				{auth === "player" ? remoteImage ? <img alt={"Loading map..."} src={remoteImage}/> : <Spinner/> : null}

@@ -1,6 +1,7 @@
 import React, {Component} from "react";
 import Logger from "../Logger";
 import BaseMap from "./BaseMap";
+import "./MapLayer.css";
 
 export default class MapLayer extends Component {
 
@@ -19,6 +20,7 @@ export default class MapLayer extends Component {
 		this.getDataImage = this.getDataImage.bind(this);
 		this.onImageLoad = this.onImageLoad.bind(this);
 		this.restoreFog = this.restoreFog.bind(this);
+		this.sendImage = this.sendImage.bind(this);
 	}
 
 	componentDidMount() {
@@ -77,6 +79,11 @@ export default class MapLayer extends Component {
 		this.contextFog.globalCompositeOperation = "destination-out";
 	}
 
+	sendImage() {
+		const image = this.getDataImage();
+		this.props.socket.emit("upload", image);
+	}
+
 	onMouseDown(e) {
 		e.preventDefault();
 		this.isRemoveFog = true;
@@ -85,12 +92,6 @@ export default class MapLayer extends Component {
 	onMouseUp(e) {
 		e.preventDefault();
 		this.isRemoveFog = false;
-		if (window.confirm("Send?")) {
-			const image = this.getDataImage();
-			this.props.socket.emit("upload", image);
-		} else {
-			this.restoreFog();
-		}
 	}
 
 	onMouseMove(e) {
@@ -136,11 +137,16 @@ export default class MapLayer extends Component {
 	}
 
 	render() {
-		const {image} = this.props;
+		const {image, alt} = this.props;
 		return (
-			<div className={"map"}>
-				<BaseMap alt={"Baldur's Gate"} src={image} onImageLoad={this.onImageLoad}/>
+			<div className={"map-layer"}>
+				<BaseMap alt={alt} src={image} onImageLoad={this.onImageLoad}/>
 				<canvas id={"canvas-fog"} ref={ref => this.canvasFog = ref} onMouseDown={this.onMouseDown} onMouseUp={this.onMouseUp} onMouseMove={this.onMouseMove}/>
+				<div className={"actions"}>
+					<span>{alt}</span>
+					<button onClick={this.restoreFog}>Cancel</button>
+					<button onClick={this.sendImage}>Send</button>
+				</div>
 			</div>
 		)
 	}
