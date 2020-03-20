@@ -36,10 +36,13 @@ app.post('/login', (req, res) => {
 	password = password.trim();
 	console.log("Authenticating...", username, password);
 	if (username.toLowerCase() === "master" && password.toLowerCase() === "enrico") {
+		console.log("User logged id as master");
 		res.status(200).send("master");
 	} else if (username.toLowerCase() === "player" && password.toLowerCase() === "tormund") {
+		console.log("User logged id as player");
 		res.status(200).send("player");
 	} else {
+		console.log("Cannot log user");
 		res.send(401);
 	}
 });
@@ -54,7 +57,18 @@ app.disable('x-powered-by');
 let room = 'party';
 io.sockets.on("connection", socket => {
 
-	socket.join(room);
+	// const rooms = io.sockets.adapter.rooms[room]
+
+	const id = socket.id;
+	const data = {
+		id: id
+	};
+
+	socket.on("login", data => {
+		console.log("Logged user id", data);
+		socket.join(room);
+		socket.emit("join", data);
+	});
 
 	socket.on("upload", data => {
 		console.log("Sending image to room", room);

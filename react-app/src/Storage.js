@@ -12,11 +12,14 @@ export default class Storage {
 	}
 
 	static getItem(key) {
-		return this.store.getItem(key)
+		if (!this.contains(key)) {
+			return null;
+		}
+		return JSON.parse(this.store.getItem(key))
 	}
 
 	static save(key, value) {
-		this.store.setItem(key, value)
+		this.store.setItem(key, JSON.stringify(value))
 	}
 
 	static remove(key) {

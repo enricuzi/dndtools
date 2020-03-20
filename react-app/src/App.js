@@ -18,7 +18,7 @@ export default class App extends Component {
 			sourceAlt: null,
 			image: null,
 			remote: null,
-			auth: Storage.getItem("auth")
+			user: Storage.getItem("user")
 		};
 		this.socket = io.connect();
 		this.onLoginSuccess = this.onLoginSuccess.bind(this);
@@ -28,19 +28,27 @@ export default class App extends Component {
 
 	componentDidMount() {
 		this.socket.on("image", data => {
-			this.logger.log("Received event 'image'", data);
+			this.logger.log("Received remote image...");
 			this.setState({remoteImage: data})
 		});
+		this.socket.on("join", data => {
+			this.logger.log("User joined the room", data);
+		});
+		// if (this.state.user) {
+		// 	this.onLoginSuccess(this.state.user);
+		// 	this.socket.emit("login", this.state.user);
+		// }
 	}
 
-	onLoginSuccess(data) {
-		Storage.save("auth", data);
-		this.setState({auth: data})
+	onLoginSuccess(user) {
+		Storage.save("user", user);
+		this.socket.emit("login", user);
+		this.setState({user});
 	}
 
 	onLogoutSuccess() {
-		Storage.remove("auth");
-		this.setState({auth: null})
+		Storage.remove("user");
+		this.setState({user: null})
 	}
 
 	onMapSelected(map) {
@@ -48,16 +56,17 @@ export default class App extends Component {
 	}
 
 	render() {
-		const {sourceImage, sourceAlt, remoteImage, auth} = this.state;
+		const {sourceImage, sourceAlt, remoteImage, user} = this.state;
+		this.logger.log("User data", user);
 		return (
 			<div className="App">
-				<Login auth={auth} onLoginSuccess={this.onLoginSuccess} onLogoutSuccess={this.onLogoutSuccess}/>
-				{auth === "master" ?
+				<Login user={user} onLoginSuccess={this.onLoginSuccess} onLogoutSuccess={this.onLogoutSuccess}/>
+				{(user && user.type === "master") ?
 					<div className={"master-tools"}>
 						{sourceImage ? <MapLayer image={sourceImage} alt={sourceAlt} socket={this.socket}/> : null}
 						<MapList  onMapSelected={this.onMapSelected}/>
 					</div> : null}
-				{auth === "player" ? remoteImage ? <img alt={"Loading map..."} src={remoteImage}/> : <Spinner/> : null}
+				{(user && user.type === "player") ? remoteImage ? <img alt={"Loading map..."} src={remoteImage}/> : <Spinner/> : null}
 			</div>
 		);
 	}

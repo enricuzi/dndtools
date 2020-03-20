@@ -30,6 +30,7 @@ export default class Login extends Component {
 			}
 			return ""
 		}).then(data => {
+			data = {type: data, id: this.state.username};
 			this.logger.log(data);
 			this.props.onLoginSuccess && this.props.onLoginSuccess(data);
 		});
@@ -42,8 +43,8 @@ export default class Login extends Component {
 
 	render() {
 		const {username, password} = this.state;
-		const {auth} = this.props;
-		if (auth) {
+		const {user} = this.props;
+		if (user) {
 			return (
 				<div className={"component-login user-login"}>
 					<button onClick={this.logout}>Logout</button>
