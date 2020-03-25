@@ -1,0 +1,7 @@
+.upload-file {}
+
+.upload-file span {}
+
+.upload-file input {
+	display: none;
+}

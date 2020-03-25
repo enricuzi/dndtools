@@ -54,20 +54,18 @@ app.use(favicon('./react-app/build/favicon.ico'));
 // Switch off the default 'X-Powered-By: Express' header
 app.disable('x-powered-by');
 
-let room = 'party';
+const room = 'party';
+const users = [];
 io.sockets.on("connection", socket => {
 
 	// const rooms = io.sockets.adapter.rooms[room]
-
-	const id = socket.id;
-	const data = {
-		id: id
-	};
+	// const id = socket.id;
 
 	socket.on("login", data => {
 		console.log("Logged user id", data);
 		socket.join(room);
-		socket.emit("join", data);
+		users.push(data);
+		socket.broadcast.to(room).emit('join', users);
 	});
 
 	socket.on("upload", data => {

@@ -2,6 +2,7 @@ import React, {Component} from "react";
 import Logger from "../Logger";
 import BaseMap from "./BaseMap";
 import "./MapLayer.css";
+import UploadFileButton from "./UploadFileButton";
 
 export default class MapLayer extends Component {
 
@@ -21,6 +22,9 @@ export default class MapLayer extends Component {
 		this.onImageLoad = this.onImageLoad.bind(this);
 		this.restoreFog = this.restoreFog.bind(this);
 		this.sendImage = this.sendImage.bind(this);
+		this.showMap = this.showMap.bind(this);
+		this.uploadImage = this.uploadImage.bind(this);
+		this.onFileUpload = this.onFileUpload.bind(this);
 	}
 
 	componentDidMount() {
@@ -79,10 +83,22 @@ export default class MapLayer extends Component {
 		this.contextFog.globalCompositeOperation = "destination-out";
 	}
 
-	sendImage() {
-		const image = this.getDataImage();
+	uploadImage(image) {
 		this.props.socket.emit("upload", image);
 	}
+
+	sendImage() {
+		const image = this.getDataImage();
+		this.uploadImage(image);
+	}
+
+	showMap() {
+		const {width, height} = this.canvasFog;
+		this.contextFog.fillStyle = this.overlay;
+		this.contextFog.fillRect(0, 0, width, height);
+		// const image = this.getDataImage(true);
+		// this.uploadImage(image);
+	};
 
 	onMouseDown(e) {
 		e.preventDefault();
@@ -97,7 +113,6 @@ export default class MapLayer extends Component {
 	onMouseMove(e) {
 		e.preventDefault();
 		if (this.isRemoveFog) {
-			// ev2 && (ev = ev2);
 
 			const pX = e.pageX
 				, pY = e.pageY;
@@ -116,14 +131,16 @@ export default class MapLayer extends Component {
 		return radGrd;
 	}
 
-	getDataImage() {
+	getDataImage(isShowAllMap) {
 		const canvasPrint = document.createElement("canvas");
 		canvasPrint.width = this.canvasFog.width;
 		canvasPrint.height = this.canvasFog.height;
 		const contextPrint = canvasPrint.getContext("2d");
 		contextPrint.drawImage(this.baseMapImage, 0, 0, this.baseMapImage.width, this.baseMapImage.height,
 							0, 0, this.canvasFog.width, this.canvasFog.height);
-		contextPrint.drawImage(this.canvasFog, 0, 0);
+		if (!isShowAllMap) {
+			contextPrint.drawImage(this.canvasFog, 0, 0);
+		}
 		this.restoreContext.drawImage(canvasPrint, 0, 0);
 		return canvasPrint.toDataURL('image/png');
 	}
@@ -136,6 +153,10 @@ export default class MapLayer extends Component {
 		this.initContextMap();
 	}
 
+	onFileUpload(file) {
+		this.props.onFileUpload && this.props.onFileUpload(file);
+	}
+
 	render() {
 		const {image, alt} = this.props;
 		return (
@@ -146,6 +167,8 @@ export default class MapLayer extends Component {
 					<span>{alt}</span>
 					<button onClick={this.restoreFog}>Cancel</button>
 					<button onClick={this.sendImage}>Send</button>
+					<button onClick={this.showMap}>Show Map</button>
+					<UploadFileButton onChange={this.onFileUpload}>Upload</UploadFileButton>
 				</div>
 			</div>
 		)
