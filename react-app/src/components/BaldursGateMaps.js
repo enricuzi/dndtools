@@ -9,9 +9,9 @@ import southWestGate from "../resources/south-west-gate.jpg";
 import southGate from "../resources/south-gate.jpg";
 import southEastGate from "../resources/south-east-gate.jpg";
 import fullMap from "../resources/full-map.jpg";
-import "./MapList.css";
+import "./BaldursGateMaps.css";
 
-export default class MapList extends Component {
+export default class BaldursGateMaps extends Component {
 
 	constructor(props) {
 		super(props);

@@ -4,9 +4,11 @@ import MapLayer from "./components/MapLayer";
 import io from 'socket.io-client';
 import Login from "./components/Login";
 import Logger from "./Logger";
-import MapList from "./components/MapList";
+import BaldursGateMaps from "./components/BaldursGateMaps";
 import Storage from "./Storage";
 import Spinner from "./components/Spinner";
+import FreeDraw from "./components/FreeDraw";
+import UploadFileButton from "./components/UploadFileButton";
 
 export default class App extends Component {
 
@@ -19,12 +21,14 @@ export default class App extends Component {
 			image: null,
 			remote: null,
 			user: Storage.getItem("user"),
-			users: []
+			users: [],
+			masterTool: null
 		};
 		this.socket = io.connect();
 		this.onLoginSuccess = this.onLoginSuccess.bind(this);
 		this.onLogoutSuccess = this.onLogoutSuccess.bind(this);
-		this.onMapSelected = this.onMapSelected.bind(this);
+		this.setSourceImage = this.setSourceImage.bind(this);
+		this.uploadImage = this.uploadImage.bind(this);
 	}
 
 	componentDidMount() {
@@ -49,21 +53,30 @@ export default class App extends Component {
 		this.setState({user: null})
 	}
 
-	onMapSelected(image) {
+	setSourceImage(image) {
 		this.setState({sourceImage: image.src, sourceAlt: image.alt})
 	}
 
+	uploadImage(image) {
+		this.socket.emit("upload", image);
+	}
+
 	render() {
-		const {sourceImage, sourceAlt, remoteImage, user, users} = this.state;
+		const {sourceImage, sourceAlt, remoteImage, user, users, masterTool} = this.state;
 		this.logger.log("User data", user);
 		return (
 			<div className="App">
 				<Login user={user} onLoginSuccess={this.onLoginSuccess} onLogoutSuccess={this.onLogoutSuccess}/>
 				{(user && user.type === "master") ?
 					<div className={"master-tools"}>
-						{sourceImage ? <MapLayer image={sourceImage} alt={sourceAlt} socket={this.socket} onFileUpload={this.onMapSelected}/> : null}
-						<MapList  onMapSelected={this.onMapSelected}/>
-					</div> : null}
+						<button onClick={() => this.setState({masterTool: "baldursFateMaps"})}>Baldur's Gate</button>
+						<button onClick={() => this.setState({masterTool: "freeDraw", sourceImage: null})}>Free Draw</button>
+						<UploadFileButton onChange={this.setSourceImage}>Upload</UploadFileButton>
+						{sourceImage ? <MapLayer image={sourceImage} alt={sourceAlt} onSendImage={this.uploadImage}/> : null}
+						{masterTool === "baldursFateMaps" ? <BaldursGateMaps onMapSelected={this.setSourceImage}/> : null}
+						{masterTool === "freeDraw" ? <FreeDraw onSendImage={this.uploadImage}/> : null}
+					</div>
+				: null}
 				{(user && user.type === "player") ? remoteImage ? <img alt={"Loading map..."} src={remoteImage}/> : <Spinner/> : null}
 				{users.map(u => <div className={`section-${u}`}></div>)}
 			</div>

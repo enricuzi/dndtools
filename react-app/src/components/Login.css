@@ -19,11 +19,6 @@
 	padding: 4px;
 }
 
-.component-login [type="submit"],
-.component-login button {
-	padding: 10px;
-}
-
 .component-login.user-login {
 	display: flex;
 	justify-content: flex-end;

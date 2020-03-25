@@ -1,3 +1,9 @@
 body {
 	margin: 0;
 }
+
+button,
+select {
+	padding: 10px;
+	border-radius: 5px;
+}
