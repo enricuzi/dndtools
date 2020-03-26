@@ -33,14 +33,26 @@ export default class App extends Component {
 
 	componentDidMount() {
 		this.socket.on("image", data => {
-			this.logger.log("Received remote image...");
-			this.setState({remoteImage: data})
+			this.logger.log("Received remote image from user", data.user);
+			this.setState({remoteImage: data.image, remoteUser: data.user})
 		});
-		this.socket.on("join", data => {
-			this.logger.log("User joined the room", data);
+		this.socket.on("join", users => {
+			this.logger.log("New user joined the room", users);
+			this.setState({users});
 		});
+		this.socket.on("leave", users => {
+			this.logger.log("An user left the room", users);
+			this.setState({users});
+		});
+		if (this.state.user) {
+			this.socket.emit("login", this.state.user);
+		}
 	}
 
+	/**
+	 * onLoginSuccess
+	 * @param user: {type: "master|player", id: "[username]"}
+	 */
 	onLoginSuccess(user) {
 		Storage.save("user", user);
 		this.socket.emit("login", user);
@@ -58,12 +70,15 @@ export default class App extends Component {
 	}
 
 	uploadImage(image) {
-		this.socket.emit("upload", image);
+		this.logger.log("Uploading image...");
+		this.socket.emit("upload", {
+			image: image,
+			user: this.state.user
+		});
 	}
 
 	render() {
-		const {sourceImage, sourceAlt, remoteImage, user, users, masterTool} = this.state;
-		this.logger.log("User data", user);
+		const {sourceImage, sourceAlt, remoteImage, remoteUser, user, users, masterTool} = this.state;
 		return (
 			<div className="App">
 				<Login user={user} onLoginSuccess={this.onLoginSuccess} onLogoutSuccess={this.onLogoutSuccess}/>
@@ -76,9 +91,22 @@ export default class App extends Component {
 						{masterTool === "baldursFateMaps" ? <BaldursGateMaps onMapSelected={this.setSourceImage}/> : null}
 						{masterTool === "freeDraw" ? <FreeDraw onSendImage={this.uploadImage}/> : null}
 					</div>
-				: null}
-				{(user && user.type === "player") ? remoteImage ? <img alt={"Loading map..."} src={remoteImage}/> : <Spinner/> : null}
-				{users.map(u => <div className={`section-${u}`}></div>)}
+					: null}
+				{(user && user.type === "player") ?
+					<div className={"player-tools"}>
+						<FreeDraw onSendImage={this.uploadImage}/>
+						{remoteImage && remoteUser.type === "master" ? <img alt={"Loading map..."} src={remoteImage}/> : <Spinner/>}
+					</div>
+					: null}
+				{users.map(user => remoteImage && remoteUser.id === user.id ?
+					<div className={`section-${user.id}`}>
+						<fieldset>
+							<legend>{user.id}</legend>
+							<img alt={"User image"} src={remoteImage}/>
+						</fieldset>
+					</div>
+					: null
+				)}
 			</div>
 		);
 	}

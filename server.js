@@ -35,11 +35,11 @@ app.post('/login', (req, res) => {
 	username = username.trim();
 	password = password.trim();
 	console.log("Authenticating...", username, password);
-	if (username.toLowerCase() === "master" && password.toLowerCase() === "enrico") {
-		console.log("User logged id as master");
+	if (password.toLowerCase() === "master") {
+		console.log("User logged id as master", username);
 		res.status(200).send("master");
-	} else if (username.toLowerCase() === "player" && password.toLowerCase() === "tormund") {
-		console.log("User logged id as player");
+	} else if (password.toLowerCase() === "player") {
+		console.log("User logged id as player", username);
 		res.status(200).send("player");
 	} else {
 		console.log("Cannot log user");
@@ -61,15 +61,26 @@ io.sockets.on("connection", socket => {
 	// const rooms = io.sockets.adapter.rooms[room]
 	// const id = socket.id;
 
+	// data: {type: "master|player", id: "[username]"}
 	socket.on("login", data => {
-		console.log("Logged user id", data);
+		console.log("Logged in user", data);
 		socket.join(room);
-		users.push(data);
+		if (!users.find(user => user.id === data.id)) {
+			users.push(data);
+		}
 		socket.broadcast.to(room).emit('join', users);
+		socket.emit("join", users);
+	});
+
+	socket.on("logout", data => {
+		console.log("Logged out user", data);
+		const user = users.find(user => user.id === data.id);
+		socket.broadcast.to(room).emit('leave', users);
+		socket.emit("leave", users);
 	});
 
 	socket.on("upload", data => {
-		console.log("Sending image to room", room);
+		console.log("Sending image to room", room, "from user", data.user);
 		socket.broadcast.to(room).emit('image', data);
 	});
 });
