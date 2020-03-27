@@ -6,7 +6,6 @@ import Login from "./components/Login";
 import Logger from "./Logger";
 import BaldursGateMaps from "./components/BaldursGateMaps";
 import Storage from "./Storage";
-import Spinner from "./components/Spinner";
 import FreeDraw from "./components/FreeDraw";
 import UploadFileButton from "./components/UploadFileButton";
 
@@ -34,7 +33,9 @@ export default class App extends Component {
 	componentDidMount() {
 		this.socket.on("image", data => {
 			this.logger.log("Received remote image from user", data.user);
-			this.setState({remoteImage: data.image, remoteUser: data.user})
+			const {users} = this.state;
+			users.find(user => user.id === data.user.id).image = data.image;
+			this.setState({users});
 		});
 		this.socket.on("join", users => {
 			this.logger.log("New user joined the room", users);
@@ -78,7 +79,7 @@ export default class App extends Component {
 	}
 
 	render() {
-		const {sourceImage, sourceAlt, remoteImage, remoteUser, user, users, masterTool} = this.state;
+		const {sourceImage, sourceAlt, user, users, masterTool} = this.state;
 		return (
 			<div className="App">
 				<Login user={user} onLoginSuccess={this.onLoginSuccess} onLogoutSuccess={this.onLogoutSuccess}/>
@@ -95,14 +96,13 @@ export default class App extends Component {
 				{(user && user.type === "player") ?
 					<div className={"player-tools"}>
 						<FreeDraw onSendImage={this.uploadImage}/>
-						{remoteImage && remoteUser.type === "master" ? <img alt={"Loading map..."} src={remoteImage}/> : <Spinner/>}
 					</div>
 					: null}
-				{users.map(user => remoteImage && remoteUser.id === user.id ?
+				{users.map(user => user.image ?
 					<div className={`section-${user.id}`}>
 						<fieldset>
 							<legend>{user.id}</legend>
-							<img alt={"User image"} src={remoteImage}/>
+							<img alt={"User image"} src={user.image}/>
 						</fieldset>
 					</div>
 					: null

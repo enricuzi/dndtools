@@ -7,3 +7,9 @@ select {
 	padding: 10px;
 	border-radius: 5px;
 }
+
+legend {
+	font-size: 42px;
+	margin: 0 auto;
+	text-transform: uppercase;
+}
