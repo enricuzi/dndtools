@@ -8,6 +8,7 @@ import BaldursGateMaps from "./components/BaldursGateMaps/BaldursGateMaps";
 import Storage from "./Storage";
 import FreeDraw from "./components/FreeDraw/FreeDraw";
 import UploadFileButton from "./components/UploadFileButton/UploadFileButton";
+import DiceRoller from "./components/DiceRoller/DiceRoller";
 
 export default class App extends Component {
 
@@ -28,6 +29,7 @@ export default class App extends Component {
 		this.onLogoutSuccess = this.onLogoutSuccess.bind(this);
 		this.setSourceImage = this.setSourceImage.bind(this);
 		this.uploadImage = this.uploadImage.bind(this);
+		this.sendRoll = this.sendRoll.bind(this);
 	}
 
 	componentDidMount() {
@@ -43,6 +45,10 @@ export default class App extends Component {
 		});
 		this.socket.on("leave", users => {
 			this.logger.log("An user left the room", users);
+			this.setState({users});
+		});
+		this.socket.on("roll", users => {
+			this.logger.log("User rolled value", users);
 			this.setState({users});
 		});
 		if (this.state.user) {
@@ -78,6 +84,12 @@ export default class App extends Component {
 		});
 	}
 
+	sendRoll(value) {
+		this.logger.log("Sending roll", value);
+		const {id} = this.state.user;
+		this.socket.emit("roll", {id, value});
+	}
+
 	render() {
 		const {sourceImage, sourceAlt, user, users, masterTool} = this.state;
 		return (
@@ -98,15 +110,17 @@ export default class App extends Component {
 						<FreeDraw onSendImage={this.uploadImage}/>
 					</div>
 					: null}
-				{users.map(user => user.image ?
-					<div className={`section-${user.id}`}>
+				{users.map(u => u.id !== user.id ?
+					<div className={`section-${u.id}`}>
 						<fieldset>
-							<legend>{user.id}</legend>
-							<img alt={"User image"} src={user.image}/>
+							<legend>{u.id}</legend>
+							<div className={"rolls"}>{u.roll}</div>
+							{u.image ? <img alt={"User image"} src={u.image}/> : null}
 						</fieldset>
 					</div>
 					: null
 				)}
+				<DiceRoller onRoll={this.sendRoll}/>
 			</div>
 		);
 	}

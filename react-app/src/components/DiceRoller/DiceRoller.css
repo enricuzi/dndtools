@@ -1,0 +1,20 @@
+.dice-roller {
+	font-size: 20px;
+}
+
+.dice-roller .inputs {
+	display: flex;
+	flex-direction: column;
+}
+
+.dice-roller label {
+	margin: 4px 0;
+}
+
+.dice-roller input {
+	font-size: 20px;
+}
+
+.dice-roller .roll {
+	font-size: 32px;
+}

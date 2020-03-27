@@ -73,6 +73,7 @@ io.sockets.on("connection", socket => {
 	});
 
 	socket.on("logout", data => {
+		// TODO: Fix logout flow
 		console.log("Logged out user", data);
 		const user = users.find(user => user.id === data.id);
 		socket.broadcast.to(room).emit('leave', users);
@@ -83,4 +84,10 @@ io.sockets.on("connection", socket => {
 		console.log("Sending image to room", room, "from user", data.user);
 		socket.broadcast.to(room).emit('image', data);
 	});
+
+	socket.on("roll", data => {
+		console.log("User rolled value", data);
+		users.find(user => user.id === data.id).roll = data.value;
+		socket.broadcast.to(room).emit('roll', users);
+	})
 });
