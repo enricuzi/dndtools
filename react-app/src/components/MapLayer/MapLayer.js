@@ -1,6 +1,6 @@
 import React, {Component} from "react";
-import Logger from "../Logger";
-import BaseMap from "./BaseMap";
+import Logger from "../../Logger";
+import BaseMap from "../BaseMap/BaseMap";
 import "./MapLayer.css";
 
 export default class MapLayer extends Component {

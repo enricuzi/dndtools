@@ -1,13 +1,13 @@
 import React, {Component} from 'react';
 import './App.css';
-import MapLayer from "./components/MapLayer";
+import MapLayer from "./components/MapLayer/MapLayer";
 import io from 'socket.io-client';
-import Login from "./components/Login";
+import Login from "./components/Login/Login";
 import Logger from "./Logger";
-import BaldursGateMaps from "./components/BaldursGateMaps";
+import BaldursGateMaps from "./components/BaldursGateMaps/BaldursGateMaps";
 import Storage from "./Storage";
-import FreeDraw from "./components/FreeDraw";
-import UploadFileButton from "./components/UploadFileButton";
+import FreeDraw from "./components/FreeDraw/FreeDraw";
+import UploadFileButton from "./components/UploadFileButton/UploadFileButton";
 
 export default class App extends Component {
 

@@ -1,7 +1,7 @@
 import React, {Component} from 'react'
 import {PropTypes} from 'prop-types';
-import Home from '../components/Home';
-import Login from "../components/Login";
+import Home from '../Home/Home';
+import Login from "../Login/Login";
 
 class HomePage extends Component {
 	constructor(props) {

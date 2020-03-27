@@ -1,14 +1,14 @@
 import React, {Component} from "react";
-import northWestGate from "../resources/north-west-gate.jpg";
-import northEastGate from "../resources/north-east-gate.jpg";
-import northGate from "../resources/north-gate.jpg";
-import westGate from "../resources/west-gate.jpg";
-import centralGate from "../resources/central-gate.jpg";
-import eastGate from "../resources/east-gate.jpg";
-import southWestGate from "../resources/south-west-gate.jpg";
-import southGate from "../resources/south-gate.jpg";
-import southEastGate from "../resources/south-east-gate.jpg";
-import fullMap from "../resources/full-map.jpg";
+import northWestGate from "../../resources/north-west-gate.jpg";
+import northEastGate from "../../resources/north-east-gate.jpg";
+import northGate from "../../resources/north-gate.jpg";
+import westGate from "../../resources/west-gate.jpg";
+import centralGate from "../../resources/central-gate.jpg";
+import eastGate from "../../resources/east-gate.jpg";
+import southWestGate from "../../resources/south-west-gate.jpg";
+import southGate from "../../resources/south-gate.jpg";
+import southEastGate from "../../resources/south-east-gate.jpg";
+import fullMap from "../../resources/full-map.jpg";
 import "./BaldursGateMaps.css";
 
 export default class BaldursGateMaps extends Component {
