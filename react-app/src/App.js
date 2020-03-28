@@ -69,7 +69,7 @@ export default class App extends Component {
 	onLogoutSuccess() {
 		Storage.remove("user");
 		this.socket.emit("logout", this.state.user);
-		this.setState({user: null})
+		this.setState({user: null, users: []})
 	}
 
 	setSourceImage(image) {
@@ -110,7 +110,7 @@ export default class App extends Component {
 						<FreeDraw onSendImage={this.uploadImage}/>
 					</div>
 					: null}
-				{users.map(u => u.id !== user.id ?
+				{user && users.map(u => u.id !== user.id ?
 					<div className={`section-${u.id}`}>
 						<fieldset>
 							<legend>{u.id}</legend>

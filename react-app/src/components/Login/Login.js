@@ -28,12 +28,12 @@ export default class Login extends Component {
 			if (response.status === 200) {
 				return response.text()
 			}
-			return ""
+			throw new Error("Error while logging...status code " + response.status);
 		}).then(data => {
 			data = {type: data, id: this.state.username};
 			this.logger.log(data);
 			this.props.onLoginSuccess && this.props.onLoginSuccess(data);
-		});
+		}).catch(e => this.logger.error(e));
 	}
 
 	logout(e) {

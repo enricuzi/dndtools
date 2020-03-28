@@ -73,9 +73,9 @@ io.sockets.on("connection", socket => {
 	});
 
 	socket.on("logout", data => {
-		// TODO: Fix logout flow
 		console.log("Logged out user", data);
-		const user = users.find(user => user.id === data.id);
+		const index = users.findIndex(user => user.id === data.id);
+		users.splice(index, 1);
 		socket.broadcast.to(room).emit('leave', users);
 		socket.emit("leave", users);
 	});
