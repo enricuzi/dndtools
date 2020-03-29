@@ -1,14 +1,15 @@
 import React, {Component} from "react";
 import "./Home.css";
 import Login from "../Login/Login";
-import Storage from "../../Storage";
+import Storage from "../Services/Storage";
 import DiceRoller from "../DiceRoller/DiceRoller";
-import Logger from "../../Logger";
+import Logger from "../Services/Logger";
 import UploadFileButton from "../UploadFileButton/UploadFileButton";
 import MapLayer from "../MapLayer/MapLayer";
 import BaldursGateMaps from "../BaldursGateMaps/BaldursGateMaps";
 import FreeDraw from "../FreeDraw/FreeDraw";
 import UserSection from "../UserSection/UserSection";
+import CharacterSheet from "../CharacterSheet/CharacterSheet";
 
 export default class Home extends Component {
 
@@ -25,6 +26,7 @@ export default class Home extends Component {
 		this.sendRoll = this.sendRoll.bind(this);
 		this.uploadImage = this.uploadImage.bind(this);
 		this.setSourceImage = this.setSourceImage.bind(this);
+		this.togglePanelRight = this.togglePanelRight.bind(this);
 	}
 
 	componentDidMount() {
@@ -38,7 +40,7 @@ export default class Home extends Component {
 	sendRoll(data) {
 		this.logger.log("Sending roll", data);
 		const {id} = this.state.user;
-		this.socket.emit("roll", {id, data});
+		this.socket.emit("roll", {id, roll: data});
 	}
 
 	/**
@@ -69,8 +71,14 @@ export default class Home extends Component {
 		this.setState({sourceImage: image.src, sourceAlt: image.alt})
 	}
 
+	togglePanelRight() {
+		this.setState({
+			showPanelRight: !this.state.showPanelRight ? "show" : ""
+		})
+	}
+
 	render() {
-		const {sourceImage, sourceAlt, user, masterTool} = this.state;
+		const {sourceImage, sourceAlt, user, masterTool, showPanelRight} = this.state;
 		const {users} = this.props;
 		return (
 			<div className={"home"}>
@@ -89,6 +97,9 @@ export default class Home extends Component {
 					<div className={"container"}>
 						<div className={"panel panel-left"}>
 							<DiceRoller onRoll={this.sendRoll}/>
+							{user.type === "player" ?
+								<CharacterSheet user={user}/>
+								: null}
 						</div>
 						<div className={"panel panel-content"}>
 							{user.type === "master" ?
@@ -107,9 +118,9 @@ export default class Home extends Component {
 								</div>
 								: null}
 						</div>
-						<div className={"panel panel-right"}>
+						<div className={`panel panel-right ${showPanelRight}`}>
 							{users.map(u => u.id !== user.id ?
-								<UserSection user={u}/>
+								<UserSection user={u} onClickImage={this.togglePanelRight}/>
 								: null
 							)}
 						</div>

@@ -1,7 +1,7 @@
 import React, {Component} from 'react';
 import './App.css';
 import io from 'socket.io-client';
-import Logger from "./Logger";
+import Logger from "./components/Services/Logger";
 import Home from "./components/Home/Home";
 
 export default class App extends Component {

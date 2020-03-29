@@ -28,7 +28,6 @@ export default class FreeDraw extends Component {
 		this.canvas.height = 768;//window.innerHeight - 100;
 
 		const {offsetLeft, offsetTop} = this.canvas;
-		const colorChooserOffsetHeight = this.colorChooser.offsetHeight;
 
 		this.deltaX = offsetLeft;
 		this.deltaY = offsetTop;

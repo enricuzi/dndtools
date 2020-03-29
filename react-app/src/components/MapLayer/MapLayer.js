@@ -1,5 +1,5 @@
 import React, {Component} from "react";
-import Logger from "../../Logger";
+import Logger from "../Services/Logger";
 import BaseMap from "../BaseMap/BaseMap";
 import "./MapLayer.css";
 
@@ -26,10 +26,9 @@ export default class MapLayer extends Component {
 
 	componentDidMount() {
 		this.contextFog = this.canvasFog.getContext("2d");
-		let mousePos;
 
 		this.canvasFog.addEventListener("touchstart", e => {
-			mousePos = getTouchPos(this.canvasFog, e);
+			// mousePos = getTouchPos(this.canvasFog, e);
 			const {clientX, clientY} = e.touches[0];
 			const event = new MouseEvent("mousedown", {clientX, clientY});
 			this.onMouseDown(event);
@@ -45,16 +44,6 @@ export default class MapLayer extends Component {
 			const event = new MouseEvent("mousemove", {clientX, clientY});
 			this.onMouseMove(event);
 		}, false);
-
-		function getTouchPos(canvasDom, e) {
-			const rect = canvasDom.getBoundingClientRect();
-			const {left, top} = rect;
-			const {clientX, clientY} = e.touches[0];
-			return {
-				x: clientX - left,
-				y: clientY - top
-			};
-		}
 	}
 
 	initContextMap() {
