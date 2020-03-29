@@ -87,7 +87,7 @@ io.sockets.on("connection", socket => {
 
 	socket.on("roll", data => {
 		console.log("User rolled value", data);
-		users.find(user => user.id === data.id).roll = data.value;
+		users.find(user => user.id === data.id).roll = data.data;
 		socket.broadcast.to(room).emit('roll', users);
 	})
 });

@@ -16,51 +16,62 @@ export default class FreeDraw extends Component {
 		this.setColor = this.setColor.bind(this);
 		this.resetCanvas = this.resetCanvas.bind(this);
 		this.sendImage = this.sendImage.bind(this);
+		this.onMouseMove = this.onMouseMove.bind(this);
+		this.onMouseDown = this.onMouseDown.bind(this);
+		this.onMouseUp = this.onMouseUp.bind(this);
+		this.onMouseOut = this.onMouseOut.bind(this);
 	}
 
 	componentDidMount() {
 
-		this.canvas.width = window.innerWidth - 20;
-		this.canvas.height = window.innerHeight - 100;
+		this.canvas.width = 1024;//window.innerWidth - 20;
+		this.canvas.height = 768;//window.innerHeight - 100;
 
 		const {offsetLeft, offsetTop} = this.canvas;
 		const colorChooserOffsetHeight = this.colorChooser.offsetHeight;
 
-		this.canvasContext = this.canvas.getContext("2d");
+		this.deltaX = offsetLeft;
+		this.deltaY = offsetTop;
 
-		this.canvas.addEventListener("mousemove", e => {
-			this.currX = parseInt(e.clientX - offsetLeft);
-			this.currY = parseInt(e.clientY - offsetTop - colorChooserOffsetHeight);
-			if (this.isDrawEnabled) {
-				this.canvasContext.beginPath();
-				if (this.drawMode === 'draw') {
-					this.canvasContext.globalCompositeOperation = 'source-over';
-					this.canvasContext.strokeStyle = this.color;
-					this.canvasContext.lineWidth = this.lineWidth;
-				} else {
-					this.canvasContext.globalCompositeOperation = 'destination-out';
-					this.canvasContext.lineWidth = Number(this.lineWidth) * 3;
-				}
-				this.canvasContext.moveTo(this.prevX, this.prevY);
-				this.canvasContext.lineTo(this.currX, this.currY);
-				this.canvasContext.lineJoin = this.canvasContext.lineCap = 'round';
-				this.canvasContext.stroke();
-				this.prevX = this.currX;
-				this.prevY = this.currY;
+		this.canvasContext = this.canvas.getContext("2d");
+	}
+
+	onMouseOut(e) {
+		this.isDrawEnabled = false;
+	}
+
+	onMouseUp(e) {
+		this.isDrawEnabled = false;
+	}
+
+	onMouseDown(e) {
+		const {scrollX, scrollY} = window;
+		this.prevX = this.currX = parseInt(e.clientX - this.deltaX + scrollX);
+		this.prevY = this.currY = parseInt(e.clientY - this.deltaY + scrollY);
+		this.isDrawEnabled = true;
+	}
+
+	onMouseMove(e) {
+		const {scrollX, scrollY} = window;
+		this.currX = parseInt(e.clientX - this.deltaX + scrollX);
+		this.currY = parseInt(e.clientY - this.deltaY + scrollY);
+		if (this.isDrawEnabled) {
+			this.canvasContext.beginPath();
+			if (this.drawMode === 'draw') {
+				this.canvasContext.globalCompositeOperation = 'source-over';
+				this.canvasContext.strokeStyle = this.color;
+				this.canvasContext.lineWidth = this.lineWidth;
+			} else {
+				this.canvasContext.globalCompositeOperation = 'destination-out';
+				this.canvasContext.lineWidth = Number(this.lineWidth) * 3;
 			}
-		}, false);
-		this.canvas.addEventListener("mousedown", e => {
-			const {offsetLeft, offsetTop} = this.canvas;
-			this.prevX = this.currX = parseInt(e.clientX - offsetLeft);
-			this.prevY = this.currY = parseInt(e.clientY - offsetTop - colorChooserOffsetHeight);
-			this.isDrawEnabled = true;
-		}, false);
-		this.canvas.addEventListener("mouseup", e => {
-			this.isDrawEnabled = false;
-		}, false);
-		this.canvas.addEventListener("mouseout", e => {
-			this.isDrawEnabled = false;
-		}, false);
+			this.canvasContext.moveTo(this.prevX, this.prevY);
+			this.canvasContext.lineTo(this.currX, this.currY);
+			this.canvasContext.lineJoin = this.canvasContext.lineCap = 'round';
+			this.canvasContext.stroke();
+			this.prevX = this.currX;
+			this.prevY = this.currY;
+		}
 	}
 
 	setColor(e) {
@@ -114,6 +125,7 @@ export default class FreeDraw extends Component {
 	render() {
 		return (
 			<div className={"free-draw"}>
+				<canvas ref={ref => this.canvas = ref} onMouseMove={this.onMouseMove} onMouseDown={this.onMouseDown} onMouseUp={this.onMouseUp} onMouseOut={this.onMouseOut}/>
 				<div className={"color-chooser"} ref={ref => this.colorChooser = ref}>
 					<button className={"green"} onClick={this.setColor}>Green</button>
 					<button className={"blue"} onClick={this.setColor}>Blue</button>
@@ -131,7 +143,6 @@ export default class FreeDraw extends Component {
 					<button className={"clear"} onClick={this.resetCanvas}>Reset</button>
 					<button className={"send"} onClick={this.sendImage}>Send</button>
 				</div>
-				<canvas ref={ref => this.canvas = ref}/>
 			</div>
 		)
 	}

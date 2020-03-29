@@ -9,8 +9,9 @@ export default class DiceRoller extends Component {
 			value: 20,
 			number: 1,
 			bonus: 0,
-			roll: 1
+			roll: null
 		};
+		this.values = [4, 6, 8, 10, 12, 20, 100];
 		this.onChangeDiceValue = this.onChangeDiceValue.bind(this);
 		this.onChangeDiceNumber = this.onChangeDiceNumber.bind(this);
 		this.onChangeDiceBonus = this.onChangeDiceBonus.bind(this);
@@ -40,7 +41,7 @@ export default class DiceRoller extends Component {
 		}
 		roll += bonus;
 		this.setState({roll});
-		this.props.onRoll && this.props.onRoll(roll)
+		this.props.onRoll && this.props.onRoll({value, number, bonus, roll})
 	}
 
 	render() {
@@ -49,12 +50,14 @@ export default class DiceRoller extends Component {
 			<div className={"dice-roller"}>
 				<div className={"inputs"}>
 					<label>
-						<span>Dice Value</span>
-						<input type={"number"} min={1} value={value} onChange={this.onChangeDiceValue}/>
+						<span>Number</span>
+						<input type={"number"} min={1} value={number} onChange={this.onChangeDiceNumber}/>
 					</label>
 					<label>
-						<span>Dice Number</span>
-						<input type={"number"} min={1} value={number} onChange={this.onChangeDiceNumber}/>
+						<span>Type</span>
+						<select onChange={this.onChangeDiceValue}>
+							{this.values.map((item, index) => <option key={index} value={item} selected={item === value}>{item}</option>)}
+						</select>
 					</label>
 					<label>
 						<span>Bonus</span>
