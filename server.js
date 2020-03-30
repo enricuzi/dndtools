@@ -7,6 +7,8 @@ const sio = require('socket.io');
 const favicon = require('serve-favicon');
 const compression = require('compression');
 
+var cors = require('cors');
+
 const app = express(),
 	options = {
 		key: fs.readFileSync(__dirname + '/rtc-video-room-key.pem'),
@@ -19,6 +21,8 @@ const app = express(),
 	io = sio(server);
 
 app.use(express.json());
+
+app.use(cors());
 
 app.post("/log", (req, res) => {
 	const log = req.body;
