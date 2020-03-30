@@ -65,7 +65,7 @@ export default class DiceRoller extends Component {
 					</label>
 				</div>
 				<div className={"button"}>
-					<button onClick={this.roll}>Roll</button>
+					<button className={"save"} onClick={this.roll}>Roll</button>
 				</div>
 				<div className={"roll"}>{roll}</div>
 			</div>

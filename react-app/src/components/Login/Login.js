@@ -47,7 +47,7 @@ export default class Login extends Component {
 		if (user) {
 			return (
 				<div className={"component-login user-login"}>
-					<button onClick={this.logout}>Logout</button>
+					<button className={"clear"} onClick={this.logout}>Logout</button>
 				</div>
 			)
 		}
@@ -60,7 +60,7 @@ export default class Login extends Component {
 					<label>
 						<input placeholder={"Password"} value={password} onChange={e => this.setState({password: e.target.value})}/>
 					</label>
-					<input type={"submit"} value={"Login"}/>
+					<input className={"save"} type={"submit"} value={"Login"}/>
 				</form>
 			</div>
 		)

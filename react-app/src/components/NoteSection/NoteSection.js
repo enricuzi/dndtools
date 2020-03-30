@@ -1,13 +1,13 @@
 import React, {Component} from "react";
-import "./CharacterSheet.css";
+import "./NoteSection.css";
 import Storage from "../Services/Storage";
 
-export default class CharacterSheet extends Component {
+export default class NoteSection extends Component {
 
 	constructor(props) {
 		super(props);
 		this.state = {
-			value: Storage.getItem("character", localStorage)
+			value: Storage.getItem("note", localStorage)
 		};
 		this.onInput = this.onInput.bind(this);
 		this.onSaveText = this.onSaveText.bind(this);
@@ -21,7 +21,7 @@ export default class CharacterSheet extends Component {
 
 	onSaveText(e) {
 		const {value} = this.content;
-		Storage.save("character", value, localStorage);
+		Storage.save("note", value, localStorage);
 	}
 
 	onClearText(e) {
@@ -31,11 +31,13 @@ export default class CharacterSheet extends Component {
 	render() {
 		const {value} = this.state;
 		return (
-			<div className={"character-sheet"}>
-				<label>Character</label>
+			<div className={"note-section"}>
+				<label>Note</label>
 				<textarea value={value} onInput={this.onInput} ref={ref => this.content = ref}/>
-				<button className={"clear"} onClick={this.onClearText}>Clear</button>
-				<button className={"save"} onClick={this.onSaveText}>Save</button>
+				<div className={"actions"}>
+					<button className={"clear"} onClick={this.onClearText}>Clear</button>
+					<button className={"save"} onClick={this.onSaveText}>Save</button>
+				</div>
 			</div>
 		)
 	}

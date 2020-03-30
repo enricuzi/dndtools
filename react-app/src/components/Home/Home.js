@@ -10,6 +10,7 @@ import BaldursGateMaps from "../BaldursGateMaps/BaldursGateMaps";
 import FreeDraw from "../FreeDraw/FreeDraw";
 import UserSection from "../UserSection/UserSection";
 import CharacterSheet from "../CharacterSheet/CharacterSheet";
+import NoteSection from "../NoteSection/NoteSection";
 
 export default class Home extends Component {
 
@@ -82,7 +83,7 @@ export default class Home extends Component {
 		const {users} = this.props;
 		return (
 			<div className={"home"}>
-				<div className={"header"}>
+				<div className={`header header-${user ? "logout" : "login"}`}>
 					<Login user={user} onLoginSuccess={this.onLoginSuccess} onLogoutSuccess={this.onLogoutSuccess}/>
 					{user && user.type === "master" ?
 						<div className={"master-tools"}>
@@ -98,7 +99,7 @@ export default class Home extends Component {
 						<div className={"panel panel-left"}>
 							<DiceRoller onRoll={this.sendRoll}/>
 							{user.type === "player" ?
-								<CharacterSheet user={user}/>
+								<CharacterSheet/>
 								: null}
 						</div>
 						<div className={"panel panel-content"}>
@@ -117,12 +118,12 @@ export default class Home extends Component {
 									<FreeDraw onSendImage={this.uploadImage}/>
 								</div>
 								: null}
+							<NoteSection/>
 						</div>
 						<div className={`panel panel-right ${showPanelRight}`}>
 							{users.map(u => u.id !== user.id ?
 								<UserSection user={u} onClickImage={this.togglePanelRight}/>
-								: null
-							)}
+								: null)}
 						</div>
 					</div>
 					: null}

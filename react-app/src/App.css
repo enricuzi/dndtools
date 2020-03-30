@@ -20,6 +20,10 @@ legend {
 	text-transform: uppercase;
 }
 
-.rolls {
-	font-size: 32px;
+button.save {
+	background-color: mediumaquamarine;
+}
+
+button.clear {
+	background-color: indianred;
 }

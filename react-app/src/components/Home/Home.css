@@ -3,6 +3,13 @@
 .home .header {
 	border-bottom: 1px solid;
 	display: flex;
+}
+
+.home .header-login {
+	justify-content: center;
+}
+
+.home .header-logout {
 	justify-content: space-between;
 	flex-direction: row-reverse;
 }
