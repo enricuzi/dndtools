@@ -1,0 +1,7 @@
+.user-rolls {
+	max-height: 200px;
+	overflow: auto;
+}
+
+.user-rolls .dice-roll-result:last-child {
+}

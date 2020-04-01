@@ -1,0 +1,11 @@
+.dice-roll-result {
+	margin: 3px 0;
+}
+
+.dice-roll-result * {
+	font-size: 18px;
+}
+
+.dice-roll-result.first * {
+	font-size: 32px;
+}

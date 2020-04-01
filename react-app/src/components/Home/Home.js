@@ -38,10 +38,14 @@ export default class Home extends Component {
 		}
 	}
 
-	sendRoll(data) {
-		this.logger.log("Sending roll", data);
-		const {id} = this.state.user;
-		this.socket.emit("roll", {id, roll: data});
+	sendRoll(roll) {
+		const {user} = this.state;
+		user.rolls = user.rolls || [];
+		user.rolls.splice(0, 0, roll);
+		this.logger.log("Sending roll", roll, user);
+		this.setState({user});
+		const {id} = user;
+		this.socket.emit("roll", {id, rolls: user.rolls});
 	}
 
 	/**
@@ -97,7 +101,7 @@ export default class Home extends Component {
 				{user ?
 					<div className={"container"}>
 						<div className={"panel panel-left"}>
-							<DiceRoller onRoll={this.sendRoll}/>
+							<DiceRoller onRoll={this.sendRoll} rolls={user.rolls}/>
 							{user.type === "player" ?
 								<CharacterSheet/>
 								: null}
