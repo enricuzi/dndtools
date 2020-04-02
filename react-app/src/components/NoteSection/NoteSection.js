@@ -11,6 +11,7 @@ export default class NoteSection extends Component {
 		};
 		this.onSaveText = this.onSaveText.bind(this);
 		this.onClearText = this.onClearText.bind(this);
+		this.setText = this.setText.bind(this);
 	}
 
 	setText() {
