@@ -9,7 +9,7 @@ import MapLayer from "../MapLayer/MapLayer";
 import BaldursGateMaps from "../BaldursGateMaps/BaldursGateMaps";
 import FreeDraw from "../FreeDraw/FreeDraw";
 import UserSection from "../UserSection/UserSection";
-import CharacterSheet from "../CharacterSheet/CharacterSheet";
+import CharacterSheetContainer from "../CharacterSheetContainer/CharacterSheetContainer";
 import NoteSection from "../NoteSection/NoteSection";
 
 export default class Home extends Component {
@@ -103,10 +103,10 @@ export default class Home extends Component {
 						<div className={"panel panel-left"}>
 							<DiceRoller onRoll={this.sendRoll} rolls={user.rolls}/>
 							{user.type === "player" ?
-								<CharacterSheet/>
+								<CharacterSheetContainer/>
 								: null}
 						</div>
-						<div className={"panel panel-content"}>
+						<div className={"panel panel-extra"}>
 							{user.type === "master" ?
 								<div className={"master-tools"}>
 									{sourceImage ?

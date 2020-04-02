@@ -1,6 +1,6 @@
 export default class Storage {
 
-	static store = sessionStorage;
+	static store = localStorage;
 
 	static set storage(target) {
 		this.store = target;
