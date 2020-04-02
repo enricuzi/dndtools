@@ -11,6 +11,7 @@ import FreeDraw from "../FreeDraw/FreeDraw";
 import UserSection from "../UserSection/UserSection";
 import CharacterSheetContainer from "../CharacterSheetContainer/CharacterSheetContainer";
 import NoteSection from "../NoteSection/NoteSection";
+import Services from "../Services/Services";
 
 export default class Home extends Component {
 
@@ -19,7 +20,9 @@ export default class Home extends Component {
 		this.logger = new Logger("Home");
 
 		this.state = {
-			user: Storage.getItem("user")
+			user: Storage.getItem("user", sessionStorage),
+			users: [],
+			enlargePanelRight: ""
 		};
 
 		this.onLoginSuccess = this.onLoginSuccess.bind(this);
@@ -28,14 +31,29 @@ export default class Home extends Component {
 		this.uploadImage = this.uploadImage.bind(this);
 		this.setSourceImage = this.setSourceImage.bind(this);
 		this.togglePanelRight = this.togglePanelRight.bind(this);
+		this.updateUsers = this.updateUsers.bind(this);
+
+		Services.init();
 	}
 
 	componentDidMount() {
-		this.socket = this.props.socket;
-
+		Services.onImage(data => {
+			this.logger.log("Received remote image from user", data.user);
+			const {users} = this.state;
+			users.find(user => user.id === data.user.id).image = data.image;
+			this.setState({users});
+		});
+		Services.onJoin(users => this.updateUsers(users));
+		Services.onLeave(users => this.updateUsers(users));
+		Services.onRoll(users => this.updateUsers(users));
 		if (this.state.user) {
-			this.socket.emit("login", this.state.user);
+			Services.publish("login", this.state.user);
 		}
+	}
+
+	updateUsers(users) {
+		this.logger.log("Updating users...", users);
+		this.setState({users})
 	}
 
 	sendRoll(roll) {
@@ -45,7 +63,7 @@ export default class Home extends Component {
 		this.logger.log("Sending roll", roll, user);
 		this.setState({user});
 		const {id} = user;
-		this.socket.emit("roll", {id, rolls: user.rolls});
+		Services.publish("roll", {id, rolls: user.rolls});
 	}
 
 	/**
@@ -53,20 +71,20 @@ export default class Home extends Component {
 	 * @param user: {type: "master|player", id: "[username]"}
 	 */
 	onLoginSuccess(user) {
-		Storage.save("user", user);
-		this.socket.emit("login", user);
+		Storage.save("user", user, sessionStorage);
+		Services.publish("login", user);
 		this.setState({user});
 	}
 
 	onLogoutSuccess() {
-		Storage.remove("user");
-		this.socket.emit("logout", this.state.user);
+		Storage.remove("user", sessionStorage);
+		Services.publish("logout", this.state.user);
 		this.setState({user: null});
 	}
 
 	uploadImage(image) {
 		this.logger.log("Uploading image...");
-		this.socket.emit("upload", {
+		Services.publish("upload", {
 			image: image,
 			user: this.state.user
 		});
@@ -78,13 +96,13 @@ export default class Home extends Component {
 
 	togglePanelRight() {
 		this.setState({
-			showPanelRight: !this.state.showPanelRight ? "show" : ""
+			enlargePanelRight: !this.state.enlargePanelRight ? "big" : ""
 		})
 	}
 
 	render() {
-		const {sourceImage, sourceAlt, user, masterTool, showPanelRight} = this.state;
-		const {users} = this.props;
+		const {sourceImage, sourceAlt, user, users, masterTool, enlargePanelRight} = this.state;
+		this.logger.log("Users", users);
 		return (
 			<div className={"home"}>
 				<div className={`header header-${user ? "logout" : "login"}`}>
@@ -106,7 +124,7 @@ export default class Home extends Component {
 								<CharacterSheetContainer/>
 								: null}
 						</div>
-						<div className={"panel panel-extra"}>
+						<div className={"panel panel-center"}>
 							{user.type === "master" ?
 								<div className={"master-tools"}>
 									{sourceImage ?
@@ -124,7 +142,7 @@ export default class Home extends Component {
 								: null}
 							<NoteSection/>
 						</div>
-						<div className={`panel panel-right ${showPanelRight}`}>
+						<div className={`panel panel-right ${enlargePanelRight}`}>
 							{users.map(u => u.id !== user.id ?
 								<UserSection user={u} onClickImage={this.togglePanelRight}/>
 								: null)}

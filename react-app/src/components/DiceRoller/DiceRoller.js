@@ -1,6 +1,5 @@
 import React, {Component} from "react";
 import "./DiceRoller.css";
-import DiceRollResult from "../DiceRollResult/DiceRollRestult";
 import Logger from "../Services/Logger";
 import UserRolls from "../UserRolls/UserRolls";
 

@@ -1,11 +1,13 @@
 import React, {Component} from "react";
 import "./UserSection.css";
 import UserRolls from "../UserRolls/UserRolls";
+import Logger from "../Services/Logger";
 
 export default class UserSection extends Component {
 
 	constructor(props) {
 		super(props);
+		this.logger = new Logger("UserSection");
 		this.onClickImage = this.onClickImage.bind(this);
 	}
 
@@ -15,6 +17,7 @@ export default class UserSection extends Component {
 
 	render() {
 		const {user} = this.props;
+		this.logger.log("user", user);
 		return (
 			<div className={`user-section section-${user.id}`}>
 				<fieldset>

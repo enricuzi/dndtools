@@ -20,6 +20,10 @@
 
 .home .panel {}
 
+.home .panel-center {
+	flex: 1;
+}
+
 .home .panel-left,
 .home .panel-right {
 	padding-top: 10px;
@@ -40,6 +44,6 @@
 	border-left: 1px solid;
 }
 
-.home .panel-right.show {
+.home .panel-right.big {
 	width: auto;
 }

@@ -37,10 +37,14 @@ app.post('/login', (req, res) => {
 	console.log("Authenticating...", username, password);
 	if (password.toLowerCase() === "master") {
 		console.log("User logged id as master", username);
-		res.status(200).send("master");
+		res.status(200).send({
+			type: "master"
+		});
 	} else if (password.toLowerCase() === "player") {
 		console.log("User logged id as player", username);
-		res.status(200).send("player");
+		res.status(200).send({
+			type: "player"
+		});
 	} else {
 		console.log("Cannot log user");
 		res.send(401);

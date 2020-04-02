@@ -1,6 +1,7 @@
 import React, {Component} from "react";
 import Logger from "../Services/Logger";
 import "./Login.css";
+import Services from "../Services/Services";
 
 export default class Login extends Component {
 
@@ -17,23 +18,11 @@ export default class Login extends Component {
 
 	onSubmit(e) {
 		e.preventDefault();
-		this.logger.log("Submitting login...", this.state);
-		fetch('/login', {
-			method: 'POST',
-			headers: {
-				'Content-Type': 'application/json'
-			},
-			body: JSON.stringify(this.state)
-		}).then(response => {
-			if (response.status === 200) {
-				return response.text()
-			}
-			throw new Error("Error while logging...status code " + response.status);
-		}).then(data => {
-			data = {type: data, id: this.state.username};
-			this.logger.log(data);
+		Services.doPost("/login", this.state).then(data => {
+			data = {type: data.type, id: this.state.username};
+			this.logger.log("Login success", data);
 			this.props.onLoginSuccess && this.props.onLoginSuccess(data);
-		}).catch(e => this.logger.error(e));
+		}).catch(() => this.logger.error("Failed to login"))
 	}
 
 	logout(e) {

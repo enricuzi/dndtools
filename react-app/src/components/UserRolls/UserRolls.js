@@ -1,12 +1,26 @@
-import React from "react";
+import React, {Component} from "react";
 import "./UserRolls.css";
 import DiceRollResult from "../DiceRollResult/DiceRollRestult";
+import Logger from "../Services/Logger";
 
-const UserRolls = props =>
-	<div className={"user-rolls"}>
-		<label>Rolls</label>
-		{props.rolls && props.rolls.map((item, index) => <DiceRollResult key={index} roll={item} first={(index === 0) ? "first": ""}/>)}
-	</div>
-;
+export default class UserRolls extends Component {
 
-export default UserRolls;
+	constructor(props) {
+		super(props);
+		this.logger = new Logger("UserRolls");
+	}
+
+	render() {
+		const {rolls} = this.props;
+		this.logger.log("rolls", rolls);
+		if (rolls && rolls.length) {
+			return (
+				<div className={"user-rolls"}>
+					<label>Rolls</label>
+					{rolls.map((item, index) => <DiceRollResult key={index} roll={item} first={(index === 0) ? "first" : ""}/>)}
+				</div>
+			)
+		}
+		return null
+	}
+}
