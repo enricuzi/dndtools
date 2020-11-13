@@ -29,7 +29,7 @@ export default class FreeDraw extends Component {
 
 		const {offsetLeft, offsetTop} = this.canvas;
 
-		this.deltaX = offsetLeft;
+		this.deltaX = offsetLeft + 250;
 		this.deltaY = offsetTop;
 
 		this.canvasContext = this.canvas.getContext("2d");
