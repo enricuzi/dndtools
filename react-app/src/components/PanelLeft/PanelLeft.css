@@ -1,15 +1,17 @@
 .panel-left {
-    width: 260px;
+    width: calc(100% - 50px);
+    max-width: 500px;
+    height: 100%;
     border-right: 1px solid;
-    padding-top: 40px;
-    transform: translateX(0);
+    border-bottom: 1px solid;
+    transform: translateX(-100%);
     transition: transform ease-in-out .3s;
-    position: relative;
-    z-index: 1;
+    position: absolute;
+    background-color: white;
 }
 
-.panel-left.closed {
-    transform: translateX(-100%);
+.panel-left.open {
+    transform: translateX(0);
 }
 
 .panel-left .close {

@@ -3,7 +3,6 @@ import "./Home.css"
 import Login from "../Login/Login"
 import Storage from "../Services/Storage"
 import Logger from "../Services/Logger"
-import UploadFileButton from "../UploadFileButton/UploadFileButton"
 import Services from "../Services/Services"
 import PanelLeft from "../PanelLeft/PanelLeft"
 import PanelCenter from "../PanelCenter/PanelCenter"
@@ -23,17 +22,27 @@ export default class Home extends Component {
             deltaLeft: 0
         }
 
-        this.onLoginSuccess = this.onLoginSuccess.bind(this)
-        this.onLogoutSuccess = this.onLogoutSuccess.bind(this)
         this.sendRoll = this.sendRoll.bind(this)
         this.uploadImage = this.uploadImage.bind(this)
-        this.setBaseMap = this.setBaseMap.bind(this)
         this.togglePanelRight = this.togglePanelRight.bind(this)
         this.updateUsers = this.updateUsers.bind(this)
 
         Services.init()
 
-        Events.PanelState.panelLeftReady(width => this.setState({deltaLeft: width}))
+        /**
+         * onLoginSuccess
+         * @param user: {type: "master|player", id: "[username]"}
+         */
+        Events.User.login(user => {
+            Storage.save("user", user, sessionStorage)
+            Services.publish("login", user)
+            this.setState({user})
+        })
+        Events.User.logout(() => {
+            Storage.remove("user", sessionStorage)
+            Services.publish("logout", this.state.user)
+            this.setState({user: null})
+        })
     }
 
     componentDidMount() {
@@ -66,32 +75,12 @@ export default class Home extends Component {
         Services.publish("roll", {id, rolls: user.rolls})
     }
 
-    /**
-     * onLoginSuccess
-     * @param user: {type: "master|player", id: "[username]"}
-     */
-    onLoginSuccess(user) {
-        Storage.save("user", user, sessionStorage)
-        Services.publish("login", user)
-        this.setState({user})
-    }
-
-    onLogoutSuccess() {
-        Storage.remove("user", sessionStorage)
-        Services.publish("logout", this.state.user)
-        this.setState({user: null})
-    }
-
     uploadImage(image) {
         this.logger.log("Uploading image...")
         Services.publish("upload", {
             image: image,
             user: this.state.user
         })
-    }
-
-    setBaseMap(image) {
-        this.setState({sourceImage: image.src, sourceAlt: image.alt})
     }
 
     togglePanelRight() {
@@ -101,33 +90,21 @@ export default class Home extends Component {
     }
 
     render() {
-        const {sourceImage, sourceAlt, user, users, masterTool, enlargePanelRight, deltaLeft} = this.state
+        const {user, users, enlargePanelRight} = this.state
         this.logger.log('State', this.state)
-        return (
-            <div className={"home"}>
-                <div className={`header header-${user ? "logout" : "login"}`}>
-                    <Login user={user} onLoginSuccess={this.onLoginSuccess} onLogoutSuccess={this.onLogoutSuccess}/>
-                    {user && user.type === "master" ?
-                        <div className={"master-tools"}>
-                            <button onClick={() => this.setState({masterTool: "baldursFateMaps"})}>Baldur's Gate</button>
-                            <button onClick={() => this.setState({
-                                masterTool: "freeDraw",
-                                sourceImage: null
-                            })}>Free Draw
-                            </button>
-                            <UploadFileButton onChange={this.setBaseMap}>Upload</UploadFileButton>
-                        </div>
-                        : null
-                    }
-                </div>
-                {user ?
+        if (user) {
+            return (
+                <div className={"home"}>
                     <div className={"container"}>
+                        <PanelCenter user={user} onMapSelected={this.setBaseMap} onSendImage={this.uploadImage}/>
                         <PanelLeft user={user} onRoll={this.sendRoll}/>
-                        <PanelCenter user={user} deltaLeft={deltaLeft} sourceImage={sourceImage} sourceAlt={sourceAlt} masterTool={masterTool} onMapSelected={this.setBaseMap} onSendImage={this.uploadImage}/>
                         <PanelRight user={user} users={users} enlargePanelRight={enlargePanelRight} onClickImage={this.togglePanelRight}/>
                     </div>
-                    : null}
-            </div>
+                </div>
+            )
+        }
+        return (
+            <Login/>
         )
     }
 }

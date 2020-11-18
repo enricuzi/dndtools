@@ -27,8 +27,8 @@ export default class FreeDraw extends Component {
         this.onMouseUp = this.onMouseUp.bind(this)
         this.onMouseOut = this.onMouseOut.bind(this)
 
-        Events.PanelState.panelLeftClosed(() => this.setState({deltaLeft: 0}))
-        Events.PanelState.panelLeftOpened(() => this.setState({deltaLeft: this.props.deltaLeft}))
+        Events.Panel.panelLeftClosed(() => this.setState({deltaLeft: 0}))
+        Events.Panel.panelLeftOpened(() => this.setState({deltaLeft: this.props.deltaLeft}))
     }
 
     componentDidMount() {

@@ -1,11 +1,10 @@
 import React, {Component} from "react"
 import './PanelCenter.css'
 import MapLayer from "../MapLayer/MapLayer"
-import BaldursGateMaps from "../BaldursGateMaps/BaldursGateMaps"
 import FreeDraw from "../FreeDraw/FreeDraw"
 import NoteSection from "../NoteSection/NoteSection"
-import Events from "../../models/Events"
-import Constants from "../../models/Constants"
+import Constants from "../../models/Constants";
+import Events from "../../models/Events";
 
 export default class PanelCenter extends Component {
 
@@ -14,12 +13,14 @@ export default class PanelCenter extends Component {
         this.onSendImage = this.onSendImage.bind(this)
         this.onMapSelected = this.onMapSelected.bind(this)
 
-        this.state = {
-            panelState: ''
-        }
-
-        Events.PanelState.panelLeftClosed(() => this.setState({panelState: Constants.FULL_WIDTH}))
-        Events.PanelState.panelLeftOpened(() => this.setState({panelState: ''}))
+        Events.Tool.freeDrawSelected(() => this.setState({
+            masterTool: Constants.Tool.FREE_DRAW
+        }))
+        Events.Tool.uploadImageSelected(image => this.setState({
+            masterTool: Constants.Tool.UPLOAD_IMAGE,
+            sourceImage: image.src,
+            sourceAlt: image.alt
+        }))
     }
 
     onSendImage(image) {
@@ -31,25 +32,22 @@ export default class PanelCenter extends Component {
     }
 
     render() {
-        const {user, sourceImage, sourceAlt, masterTool, deltaLeft} = this.props
-        const {panelState} = this.state
+        const {user} = this.props
+        const {sourceImage, sourceAlt, masterTool} = this.state || {}
         return (
-            <div className={`panel panel-center ${panelState}`}>
-                {user.type === "master" ?
+            <div className={`panel panel-center`}>
+                {user.type === Constants.User.MASTER ?
                     <div className={"master-tools"}>
-                        {sourceImage ?
-                            <MapLayer image={sourceImage} alt={sourceAlt} onSendImage={this.onSendImage} deltaLeft={deltaLeft}/> : null}
-                        {masterTool === "baldursFateMaps" ?
-                            <BaldursGateMaps onMapSelected={this.onMapSelected}/> : null}
-                        {masterTool === "freeDraw" ?
-                            <FreeDraw onSendImage={this.onSendImage} deltaLeft={deltaLeft}/> : null}
+                        {masterTool === Constants.Tool.FREE_DRAW ?
+                            <FreeDraw onSendImage={this.onSendImage}/> :
+                            masterTool === Constants.Tool.UPLOAD_IMAGE ?
+                                <MapLayer image={sourceImage} alt={sourceAlt} onSendImage={this.onSendImage}/> : null}
                     </div>
-                    : null}
-                {user.type === "player" ?
-                    <div className={"player-tools"}>
-                        <FreeDraw onSendImage={this.onSendImage}/>
-                    </div>
-                    : null}
+                    : user.type === Constants.User.PLAYER ?
+                        <div className={"player-tools"}>
+                            <FreeDraw onSendImage={this.onSendImage}/>
+                        </div>
+                        : null}
                 <NoteSection/>
             </div>
         )

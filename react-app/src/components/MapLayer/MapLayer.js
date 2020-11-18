@@ -2,8 +2,6 @@ import React, {Component} from "react"
 import Logger from "../Services/Logger"
 import BaseMap from "../BaseMap/BaseMap"
 import "./MapLayer.css"
-import Events from "../../models/Events"
-import Constants from "../../models/Constants"
 
 export default class MapLayer extends Component {
 
@@ -16,10 +14,6 @@ export default class MapLayer extends Component {
         this.overlay = 'rgba( 0, 0, 0, 1 )'
         this.baseMapImage = null
 
-        this.state = {
-            deltaLeft: this.props.deltaLeft
-        }
-
         this.onMouseMove = this.onMouseMove.bind(this)
         this.onMouseDown = this.onMouseDown.bind(this)
         this.onMouseUp = this.onMouseUp.bind(this)
@@ -28,9 +22,6 @@ export default class MapLayer extends Component {
         this.restoreFog = this.restoreFog.bind(this)
         this.sendImage = this.sendImage.bind(this)
         this.showMap = this.showMap.bind(this)
-
-        Events.PanelState.panelLeftClosed(() => this.setState({deltaLeft: 0}))
-        Events.PanelState.panelLeftOpened(() => this.setState({deltaLeft: this.props.deltaLeft}))
     }
 
     componentDidMount() {
@@ -101,7 +92,7 @@ export default class MapLayer extends Component {
     onMouseMove(e) {
         e.preventDefault()
         if (this.isRemoveFog) {
-            const pX = e.clientX - this.state.deltaLeft + window.scrollX, pY = e.clientY - this.r2 + window.scrollY
+            const pX = e.clientX + window.scrollX, pY = e.clientY - this.r2 + window.scrollY
             // reveal wherever we drag
             this.contextFog.fillStyle = this.getMapRadialGradient(pX, pY)
             this.contextFog.fillRect(pX - this.r2, pY - this.r2, this.r2 * 2, this.r2 * 2)
@@ -131,9 +122,9 @@ export default class MapLayer extends Component {
 
     onImageLoad(image) {
         this.baseMapImage = image
-        const {width, height} = image
-        this.canvasFog.width = width
-        this.canvasFog.height = height
+        const {offsetWidth, offsetHeight} = image
+        this.canvasFog.width = offsetWidth
+        this.canvasFog.height = offsetHeight
         this.initContextMap()
     }
 
