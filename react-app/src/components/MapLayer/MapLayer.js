@@ -28,6 +28,9 @@ export default class MapLayer extends Component {
         this.restoreFog = this.restoreFog.bind(this)
         this.sendImage = this.sendImage.bind(this)
         this.showMap = this.showMap.bind(this)
+
+        Events.PanelState.panelLeftClosed(() => this.setState({deltaLeft: 0}))
+        Events.PanelState.panelLeftOpened(() => this.setState({deltaLeft: this.props.deltaLeft}))
     }
 
     componentDidMount() {
@@ -50,9 +53,6 @@ export default class MapLayer extends Component {
             const event = new MouseEvent("mousemove", {clientX, clientY})
             this.onMouseMove(event)
         }, false)
-
-        Events.PanelState.panelLeftClosed(() => this.setState({deltaLeft: 0}))
-        Events.PanelState.panelLeftOpened(() => this.setState({deltaLeft: this.props.deltaLeft}))
     }
 
     initContextMap() {

@@ -26,6 +26,9 @@ export default class FreeDraw extends Component {
         this.onMouseDown = this.onMouseDown.bind(this)
         this.onMouseUp = this.onMouseUp.bind(this)
         this.onMouseOut = this.onMouseOut.bind(this)
+
+        Events.PanelState.panelLeftClosed(() => this.setState({deltaLeft: 0}))
+        Events.PanelState.panelLeftOpened(() => this.setState({deltaLeft: this.props.deltaLeft}))
     }
 
     componentDidMount() {
@@ -39,9 +42,6 @@ export default class FreeDraw extends Component {
         this.deltaY = offsetTop + 53
 
         this.canvasContext = this.canvas.getContext("2d")
-
-        Events.PanelState.panelLeftClosed(() => this.setState({deltaLeft: 0}))
-        Events.PanelState.panelLeftOpened(() => this.setState({deltaLeft: this.props.deltaLeft}))
     }
 
     onMouseOut(e) {
@@ -149,7 +149,7 @@ export default class FreeDraw extends Component {
                         <option value={"20"}>20</option>
                     </select>
                     <button className={"clear"} onClick={this.resetCanvas}>Reset</button>
-                    <button className={"send"} onClick={this.sendImage}>Send</button>
+                    <button className={"save"} onClick={this.sendImage}>Send</button>
                 </div>
             </div>
         )

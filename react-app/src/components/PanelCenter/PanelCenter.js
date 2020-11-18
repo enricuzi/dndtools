@@ -17,9 +17,7 @@ export default class PanelCenter extends Component {
         this.state = {
             panelState: ''
         }
-    }
 
-    componentDidMount() {
         Events.PanelState.panelLeftClosed(() => this.setState({panelState: Constants.FULL_WIDTH}))
         Events.PanelState.panelLeftOpened(() => this.setState({panelState: ''}))
     }

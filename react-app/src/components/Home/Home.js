@@ -8,6 +8,7 @@ import Services from "../Services/Services"
 import PanelLeft from "../PanelLeft/PanelLeft"
 import PanelCenter from "../PanelCenter/PanelCenter"
 import PanelRight from "../PanelRight/PanelRight"
+import Events from "../../models/Events";
 
 export default class Home extends Component {
 
@@ -18,7 +19,8 @@ export default class Home extends Component {
         this.state = {
             user: Storage.getItem("user", sessionStorage),
             users: [],
-            enlargePanelRight: ""
+            enlargePanelRight: "",
+            deltaLeft: 0
         }
 
         this.onLoginSuccess = this.onLoginSuccess.bind(this)
@@ -30,6 +32,8 @@ export default class Home extends Component {
         this.updateUsers = this.updateUsers.bind(this)
 
         Services.init()
+
+        Events.PanelState.panelLeftReady(width => this.setState({deltaLeft: width}))
     }
 
     componentDidMount() {
@@ -45,7 +49,6 @@ export default class Home extends Component {
         if (this.state.user) {
             Services.publish("login", this.state.user)
         }
-        this.deltaLeft = document.querySelector('.panel-left').offsetWidth
     }
 
     updateUsers(users) {
@@ -98,8 +101,8 @@ export default class Home extends Component {
     }
 
     render() {
-        const {sourceImage, sourceAlt, user, users, masterTool, enlargePanelRight} = this.state
-        this.logger.log("Users", users)
+        const {sourceImage, sourceAlt, user, users, masterTool, enlargePanelRight, deltaLeft} = this.state
+        this.logger.log('State', this.state)
         return (
             <div className={"home"}>
                 <div className={`header header-${user ? "logout" : "login"}`}>
@@ -120,7 +123,7 @@ export default class Home extends Component {
                 {user ?
                     <div className={"container"}>
                         <PanelLeft user={user} onRoll={this.sendRoll}/>
-                        <PanelCenter user={user} deltaLeft={this.deltaLeft} sourceImage={sourceImage} sourceAlt={sourceAlt} masterTool={masterTool} onMapSelected={this.setBaseMap} onSendImage={this.uploadImage}/>
+                        <PanelCenter user={user} deltaLeft={deltaLeft} sourceImage={sourceImage} sourceAlt={sourceAlt} masterTool={masterTool} onMapSelected={this.setBaseMap} onSendImage={this.uploadImage}/>
                         <PanelRight user={user} users={users} enlargePanelRight={enlargePanelRight} onClickImage={this.togglePanelRight}/>
                     </div>
                     : null}
