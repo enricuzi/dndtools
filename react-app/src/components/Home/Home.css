@@ -24,26 +24,7 @@
 	flex: 1;
 }
 
-.home .panel-left,
-.home .panel-right {
-	padding-top: 10px;
-}
-
-.home .panel-left {
-	width: 260px;
-	border-right: 1px solid;
-}
-
 .home .panel-content {
 	overflow: auto;
 	flex: 1
-}
-
-.home .panel-right {
-	width: 260px;
-	border-left: 1px solid;
-}
-
-.home .panel-right.big {
-	width: auto;
 }

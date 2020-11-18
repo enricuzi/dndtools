@@ -32,12 +32,12 @@ export default class NoteSection extends Component {
 		const {value} = this.state;
 		return (
 			<div className={"note-section"}>
-				<label>Note</label>
-				<textarea value={value} onInput={this.setText} ref={ref => this.content = ref}/>
 				<div className={"actions"}>
+					<label>Note</label>
 					<button className={"clear"} onClick={this.onClearText}>Clear</button>
 					<button className={"save"} onClick={this.onSaveText}>Save</button>
 				</div>
+				<textarea value={value} onInput={this.setText} ref={ref => this.content = ref}/>
 			</div>
 		)
 	}

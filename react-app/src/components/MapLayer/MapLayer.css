@@ -4,8 +4,9 @@
 
 .map-layer .actions {
 	display: flex;
-	/*justify-extra: center;*/
-	/*align-items: center;*/
+	justify-content: start;
+	align-items: center;
+	padding-left: 50px;
 }
 
 .map-layer .map-container {

@@ -1,0 +1,9 @@
+.panel-right {
+    width: 260px;
+    border-left: 1px solid;
+    padding-top: 10px;
+}
+
+.big {
+    width: auto;
+}

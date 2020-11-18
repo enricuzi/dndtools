@@ -2,10 +2,20 @@
 	margin: 3px 0;
 }
 
-.dice-roll-result * {
+.dice-roll-result:not(.first) * {
 	font-size: 18px;
 }
 
-.dice-roll-result.first * {
+.dice-roll-result.first {
+	display: flex;
+	align-items: center;
+	flex-direction: column;
+}
+
+.dice-roll-result.first .value * {
+	font-size: 48px;
+}
+
+.dice-roll-result.first .detail {
 	font-size: 32px;
 }
