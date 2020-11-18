@@ -3,9 +3,8 @@
   "version": "1.0.0",
   "main": "script.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "node server.js",
-    "prod": "cd react-app && npm run-script build"
+    "install": "cd react-app && npm install",
+    "start": "node server.js"
   },
   "author": "",
   "license": "ISC",
