@@ -1,148 +1,147 @@
-import React, {Component} from "react"
+import React, {useEffect, useRef} from "react"
 import Logger from "../Services/Logger"
 import BaseMap from "../BaseMap/BaseMap"
 import "./MapLayer.css"
+import Events from "../../models/Events";
 
-export default class MapLayer extends Component {
+const MapLayer = props => {
 
-    constructor(props) {
-        super(props)
-        this.logger = new Logger("MapLayer")
-        this.r1 = 30
-        this.r2 = 100
-        this.density = .4
-        this.overlay = 'rgba( 0, 0, 0, 1 )'
-        this.baseMapImage = null
+    const logger = new Logger("MapLayer")
+    const {alt, image} = props
+    const r1 = 30
+    const r2 = 100
+    const density = .4
+    const overlay = 'rgba( 0, 0, 0, 1 )'
+    let baseMapImage = null
+    let canvasFogRef = useRef(null)
+    let isRemoveFog = false
+    let restoreContext
+    let contextFog = null
+    let restoreCanvas = null
 
-        this.onMouseMove = this.onMouseMove.bind(this)
-        this.onMouseDown = this.onMouseDown.bind(this)
-        this.onMouseUp = this.onMouseUp.bind(this)
-        this.getDataImage = this.getDataImage.bind(this)
-        this.onImageLoad = this.onImageLoad.bind(this)
-        this.restoreFog = this.restoreFog.bind(this)
-        this.sendImage = this.sendImage.bind(this)
-        this.showMap = this.showMap.bind(this)
-    }
+    useEffect(() => {
+        const canvasFog = canvasFogRef.current
+        contextFog = canvasFog.getContext("2d")
 
-    componentDidMount() {
-        this.contextFog = this.canvasFog.getContext("2d")
-
-        this.canvasFog.addEventListener("touchstart", e => {
-            // mousePos = getTouchPos(this.canvasFog, e)
+        canvasFog.addEventListener("touchstart", e => {
+            // mousePos = getTouchPos(const canvasFog, e)
             const {clientX, clientY} = e.touches[0]
             const event = new MouseEvent("mousedown", {clientX, clientY})
-            this.onMouseDown(event)
+            onMouseDown(event)
         }, false)
 
-        this.canvasFog.addEventListener("touchend", e => {
+        canvasFog.addEventListener("touchend", e => {
             const event = new MouseEvent("mouseup", {})
-            this.onMouseUp(event)
+            onMouseUp(event)
         }, false)
 
-        this.canvasFog.addEventListener("touchmove", e => {
+        canvasFog.addEventListener("touchmove", e => {
             const {clientX, clientY} = e.touches[0]
             const event = new MouseEvent("mousemove", {clientX, clientY})
-            this.onMouseMove(event)
+            onMouseMove(event)
         }, false)
-    }
+    })
 
-    initContextMap() {
-        const {width, height} = this.canvasFog
-        this.logger.log("Initializing Fog...", width, height)
+    function initContextMap() {
+        const canvasFog = canvasFogRef.current
+        const {width, height} = canvasFog
+        logger.log("Initializing Fog...", width, height)
         // black out the canvas
-        this.contextFog.fillStyle = this.overlay
-        this.contextFog.fillRect(0, 0, width, height)
+        contextFog.fillStyle = overlay
+        contextFog.fillRect(0, 0, width, height)
         // set up our "eraser"
-        this.contextFog.globalCompositeOperation = 'destination-out'
+        contextFog.globalCompositeOperation = 'destination-out'
 
-        this.restoreCanvas = document.createElement("canvas")
-        this.restoreCanvas.width = width
-        this.restoreCanvas.height = height
-        this.restoreContext = this.restoreCanvas.getContext("2d")
-        this.restoreContext.drawImage(this.canvasFog, 0, 0)
+        restoreCanvas = document.createElement("canvas")
+        restoreCanvas.width = width
+        restoreCanvas.height = height
+        restoreContext = restoreCanvas.getContext("2d")
+        restoreContext.drawImage(canvasFog, 0, 0)
     }
 
-    restoreFog() {
-        this.contextFog.globalCompositeOperation = "source-over"
-        this.contextFog.drawImage(this.restoreCanvas, 0, 0)
-        this.contextFog.globalCompositeOperation = "destination-out"
+    function restoreFog() {
+        contextFog.globalCompositeOperation = "source-over"
+        contextFog.drawImage(restoreCanvas, 0, 0)
+        contextFog.globalCompositeOperation = "destination-out"
     }
 
-    sendImage() {
-        const image = this.getDataImage()
-        this.props.onSendImage && this.props.onSendImage(image)
+    function sendImage() {
+        const image = getDataImage()
+        Events.Tool.publish(Events.Tool.SEND_IMAGE, {image})
     }
 
-    showMap() {
-        const {width, height} = this.canvasFog
-        this.contextFog.fillStyle = this.overlay
-        this.contextFog.fillRect(0, 0, width, height)
+    function showMap() {
+        const canvasFog = canvasFogRef.current
+        const {width, height} = canvasFog
+        contextFog.fillStyle = overlay
+        contextFog.fillRect(0, 0, width, height)
     }
 
-    onMouseDown(e) {
+    function onMouseDown(e) {
         e.preventDefault()
-        this.isRemoveFog = true
+        isRemoveFog = true
     }
 
-    onMouseUp(e) {
+    function onMouseUp(e) {
         e.preventDefault()
-        this.isRemoveFog = false
+        isRemoveFog = false
     }
 
-    onMouseMove(e) {
+    function onMouseMove(e) {
         e.preventDefault()
-        if (this.isRemoveFog) {
-            const pX = e.clientX + window.scrollX, pY = e.clientY - this.r2 + window.scrollY
+        if (isRemoveFog) {
+            const pX = e.clientX + window.scrollX, pY = e.clientY - r2 + window.scrollY
             // reveal wherever we drag
-            this.contextFog.fillStyle = this.getMapRadialGradient(pX, pY)
-            this.contextFog.fillRect(pX - this.r2, pY - this.r2, this.r2 * 2, this.r2 * 2)
+            contextFog.fillStyle = getMapRadialGradient(pX, pY)
+            contextFog.fillRect(pX - r2, pY - r2, r2 * 2, r2 * 2)
         }
     }
 
-    getMapRadialGradient(pX, pY) {
-        const radGrd = this.contextFog.createRadialGradient(pX, pY, this.r1, pX, pY, this.r2)
+    function getMapRadialGradient(pX, pY) {
+        const radGrd = contextFog.createRadialGradient(pX, pY, r1, pX, pY, r2)
         radGrd.addColorStop(0, 'rgba( 0, 0, 0,  1 )')
-        radGrd.addColorStop(this.density, 'rgba( 0, 0, 0, .1 )')
+        radGrd.addColorStop(density, 'rgba( 0, 0, 0, .1 )')
         radGrd.addColorStop(1, 'rgba( 0, 0, 0,  0 )')
         return radGrd
     }
 
-    getDataImage(isShowAllMap) {
+    function getDataImage(isShowAllMap) {
+        const canvasFog = canvasFogRef.current
         const canvasPrint = document.createElement("canvas")
-        canvasPrint.width = this.canvasFog.width
-        canvasPrint.height = this.canvasFog.height
+        canvasPrint.width = canvasFog.width
+        canvasPrint.height = canvasFog.height
         const contextPrint = canvasPrint.getContext("2d")
-        contextPrint.drawImage(this.baseMapImage, 0, 0, this.baseMapImage.width, this.baseMapImage.height, 0, 0, this.canvasFog.width, this.canvasFog.height)
+        contextPrint.drawImage(baseMapImage, 0, 0, baseMapImage.width, baseMapImage.height, 0, 0, canvasFog.width, canvasFog.height)
         if (!isShowAllMap) {
-            contextPrint.drawImage(this.canvasFog, 0, 0)
+            contextPrint.drawImage(canvasFog, 0, 0)
         }
-        this.restoreContext.drawImage(canvasPrint, 0, 0)
+        restoreContext.drawImage(canvasPrint, 0, 0)
         return canvasPrint.toDataURL('image/png')
     }
 
-    onImageLoad(image) {
-        this.baseMapImage = image
+    function onImageLoad(image) {
+        const canvasFog = canvasFogRef.current
+        baseMapImage = image
         const {offsetWidth, offsetHeight} = image
-        this.canvasFog.width = offsetWidth
-        this.canvasFog.height = offsetHeight
-        this.initContextMap()
+        canvasFog.width = offsetWidth
+        canvasFog.height = offsetHeight
+        initContextMap()
     }
 
-    render() {
-        const {image, alt} = this.props
-        return (
-            <div className={"map-layer"}>
-                <div className={"actions"} ref={ref => this.actions = ref}>
-                    <span>{alt}</span>
-                    <button onClick={this.restoreFog}>Cancel</button>
-                    <button onClick={this.sendImage}>Send</button>
-                    <button onClick={this.showMap}>Show Map</button>
-                </div>
-                <div className={"map-container"}>
-                    <BaseMap alt={alt} src={image} onImageLoad={this.onImageLoad}/>
-                    <canvas id={"canvas-fog"} ref={ref => this.canvasFog = ref} onMouseDown={this.onMouseDown} onMouseUp={this.onMouseUp} onMouseMove={this.onMouseMove}/>
-                </div>
+    return (
+        <div className={"map-layer"}>
+            <div className={"actions"}>
+                <span>{alt}</span>
+                <button onClick={restoreFog}>Cancel</button>
+                <button onClick={sendImage}>Send</button>
+                <button onClick={showMap}>Show Map</button>
             </div>
-        )
-    }
+            <div className={"map-container"}>
+                <BaseMap alt={alt} src={image} onImageLoad={onImageLoad}/>
+                <canvas id={"canvas-fog"} ref={canvasFogRef} onMouseDown={onMouseDown} onMouseUp={onMouseUp} onMouseMove={onMouseMove}/>
+            </div>
+        </div>
+    )
 }
+
+export default MapLayer

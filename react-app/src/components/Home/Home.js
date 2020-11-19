@@ -1,4 +1,4 @@
-import React, {Component} from "react"
+import React, {useEffect, useState} from "react"
 import "./Home.css"
 import Login from "../Login/Login"
 import Storage from "../Services/Storage"
@@ -9,102 +9,80 @@ import PanelCenter from "../PanelCenter/PanelCenter"
 import PanelRight from "../PanelRight/PanelRight"
 import Events from "../../models/Events";
 
-export default class Home extends Component {
+const Home = props => {
 
-    constructor(props) {
-        super(props)
-        this.logger = new Logger("Home")
+    const logger = new Logger("Home")
 
-        this.state = {
-            user: Storage.getItem("user", sessionStorage),
-            users: [],
-            enlargePanelRight: "",
-            deltaLeft: 0
-        }
+    const [user, setUser] = useState(Storage.getItem("user", sessionStorage))
+    const [users, setUsers] = useState([])
 
-        this.sendRoll = this.sendRoll.bind(this)
-        this.uploadImage = this.uploadImage.bind(this)
-        this.togglePanelRight = this.togglePanelRight.bind(this)
-        this.updateUsers = this.updateUsers.bind(this)
+    Services.init()
 
-        Services.init()
-
-        /**
-         * onLoginSuccess
-         * @param user: {type: "master|player", id: "[username]"}
-         */
-        Events.User.login(user => {
-            Storage.save("user", user, sessionStorage)
-            Services.publish("login", user)
-            this.setState({user})
+    Events.Tool.onSendImage(image => {
+        logger.log("Uploading image...")
+        Services.publish("upload", {
+            image: image,
+            user: user
         })
-        Events.User.logout(() => {
-            Storage.remove("user", sessionStorage)
-            Services.publish("logout", this.state.user)
-            this.setState({user: null})
-        })
-    }
+    })
 
-    componentDidMount() {
+    /**
+     * onLoginSuccess
+     * @param user: {type: "master|player", id: "[username]"}
+     */
+    Events.User.login(user => {
+        Storage.save("user", user, sessionStorage)
+        Services.publish("login", user)
+        setUser(user)
+    })
+    Events.User.logout(() => {
+        Storage.remove("user", sessionStorage)
+        Services.publish("logout", user)
+        setUser(null)
+    })
+
+    useEffect(() => {
         Services.onImage(data => {
-            this.logger.log("Received remote image from user", data.user)
-            const {users} = this.state
+            logger.log("Received remote image from user", data.user)
             users.find(user => user.id === data.user.id).image = data.image
-            this.setState({users})
+            setUsers(users)
         })
-        Services.onJoin(users => this.updateUsers(users))
-        Services.onLeave(users => this.updateUsers(users))
-        Services.onRoll(users => this.updateUsers(users))
-        if (this.state.user) {
-            Services.publish("login", this.state.user)
+        Services.onJoin(users => updateUsers(users))
+        Services.onLeave(users => updateUsers(users))
+        Services.onRoll(users => updateUsers(users))
+        if (user) {
+            Services.publish("login", user)
         }
+    }, [])
+
+    function updateUsers(users) {
+        logger.log("Updating users...", users)
+        setUsers(users)
     }
 
-    updateUsers(users) {
-        this.logger.log("Updating users...", users)
-        this.setState({users})
-    }
-
-    sendRoll(roll) {
-        const {user} = this.state
+    function sendRoll(roll) {
         user.rolls = user.rolls || []
         user.rolls.splice(0, 0, roll)
-        this.logger.log("Sending roll", roll, user)
-        this.setState({user})
+        logger.log("Sending roll", roll, user)
+        setUser(user)
         const {id} = user
         Services.publish("roll", {id, rolls: user.rolls})
     }
 
-    uploadImage(image) {
-        this.logger.log("Uploading image...")
-        Services.publish("upload", {
-            image: image,
-            user: this.state.user
-        })
-    }
-
-    togglePanelRight() {
-        this.setState({
-            enlargePanelRight: !this.state.enlargePanelRight ? "big" : ""
-        })
-    }
-
-    render() {
-        const {user, users, enlargePanelRight} = this.state
-        this.logger.log('State', this.state)
-        if (user) {
-            return (
-                <div className={"home"}>
-                    <div className={"container"}>
-                        <PanelCenter user={user} onMapSelected={this.setBaseMap} onSendImage={this.uploadImage}/>
-                        <PanelLeft user={user} onRoll={this.sendRoll}/>
-                        <PanelRight user={user} users={users} enlargePanelRight={enlargePanelRight} onClickImage={this.togglePanelRight}/>
-                    </div>
-                </div>
-            )
-        }
+    if (user) {
         return (
-            <Login/>
+            <div className={"home"}>
+                <div className={"container"}>
+                    <PanelCenter user={user}/>
+                    <PanelLeft user={user} onRoll={sendRoll}/>
+                    <PanelRight user={user} users={users}/>
+                </div>
+            </div>
         )
     }
+    return (
+        <Login/>
+    )
 }
+
+export default Home

@@ -1,55 +1,42 @@
-import React, {Component} from "react"
+import React, {useState} from "react"
 import './PanelCenter.css'
-import MapLayer from "../MapLayer/MapLayer"
 import FreeDraw from "../FreeDraw/FreeDraw"
 import NoteSection from "../NoteSection/NoteSection"
 import Constants from "../../models/Constants";
 import Events from "../../models/Events";
+import MapLayer from "../MapLayer/MapLayer";
 
-export default class PanelCenter extends Component {
+const PanelCenter = props => {
 
-    constructor(props) {
-        super(props)
-        this.onSendImage = this.onSendImage.bind(this)
-        this.onMapSelected = this.onMapSelected.bind(this)
+    const [masterTool, setMasterTool] = useState(Constants.Tool.FREE_DRAW)
+    const [sourceImage, setSourceImage] = useState(null)
+    const [sourceAlt, setSourceAlt] = useState(null)
 
-        Events.Tool.freeDrawSelected(() => this.setState({
-            masterTool: Constants.Tool.FREE_DRAW
-        }))
-        Events.Tool.uploadImageSelected(image => this.setState({
-            masterTool: Constants.Tool.UPLOAD_IMAGE,
-            sourceImage: image.src,
-            sourceAlt: image.alt
-        }))
-    }
+    Events.Tool.freeDrawSelected(() => setMasterTool(Constants.Tool.FREE_DRAW))
+    Events.Tool.uploadImageSelected(image => {
+        setMasterTool(Constants.Tool.UPLOAD_IMAGE)
+        setSourceImage(image.src)
+        setSourceAlt(image.alt)
+    })
 
-    onSendImage(image) {
-        this.props.onSendImage && this.props.onSendImage(image)
-    }
-
-    onMapSelected(image) {
-        this.props.onMapSelected && this.props.onMapSelected(image)
-    }
-
-    render() {
-        const {user} = this.props
-        const {sourceImage, sourceAlt, masterTool} = this.state || {}
-        return (
-            <div className={`panel panel-center`}>
-                {user.type === Constants.User.MASTER ?
-                    <div className={"master-tools"}>
-                        {masterTool === Constants.Tool.FREE_DRAW ?
-                            <FreeDraw onSendImage={this.onSendImage}/> :
-                            masterTool === Constants.Tool.UPLOAD_IMAGE ?
-                                <MapLayer image={sourceImage} alt={sourceAlt} onSendImage={this.onSendImage}/> : null}
+    const {user} = props
+    return (
+        <div className={`panel panel-center`}>
+            {user.type === Constants.User.MASTER ?
+                <div className={"master-tools"}>
+                    {masterTool === Constants.Tool.FREE_DRAW ?
+                        <FreeDraw/> :
+                        masterTool === Constants.Tool.UPLOAD_IMAGE ?
+                            <MapLayer image={sourceImage} alt={sourceAlt}/> : null}
+                </div>
+                : user.type === Constants.User.PLAYER ?
+                    <div className={"player-tools"}>
+                        <FreeDraw/>
                     </div>
-                    : user.type === Constants.User.PLAYER ?
-                        <div className={"player-tools"}>
-                            <FreeDraw onSendImage={this.onSendImage}/>
-                        </div>
-                        : null}
-                <NoteSection/>
-            </div>
-        )
-    }
+                    : null}
+            <NoteSection/>
+        </div>
+    )
 }
+
+export default PanelCenter
