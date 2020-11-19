@@ -1,20 +1,42 @@
-import React, {useEffect, useRef} from "react"
+import React, {useEffect, useRef, useState} from "react"
 import "./FreeDraw.css"
 import Events from "../../models/Events"
+import Constants from "../../models/Constants";
+import Logger from "../Services/Logger";
 
 const FreeDraw = props => {
 
+    const logger = new Logger('FreeDraw')
     let isDrawEnabled = false
     let prevX = 0
     let currX = 0
     let prevY = 0
     let currY = 0
-    let color = "black"
-    let drawMode = "draw"
-    let lineWidth = 10
     let deltaX = 0
     let deltaY = 0
     const canvasRef = useRef(null)
+    const [color, setColor] = useState(Constants.Color.black)
+    const [mode, setMode] = useState(Constants.Tool.FREE_DRAW_MODE_DRAW)
+    const [lineWidth, setLineWidth] = useState(10)
+
+    Events.Tool.onFreeDrawColor(value => {
+        logger.log('Setting color to', value)
+        setColor(value)
+    })
+    Events.Tool.onFreeDrawLineWidth(value => setLineWidth(value))
+    Events.Tool.onFreeDrawMode(value => setMode(value))
+    Events.Tool.onClearCanvas(() => {
+        const canvas = canvasRef.current
+        const {width, height} = canvas
+        const canvasContext = canvas.getContext("2d")
+        canvasContext.fillStyle = "white"
+        canvasContext.fillRect(0, 0, width, height)
+        canvasContext.globalCompositeOperation = 'source-over'
+    })
+    Events.Tool.onSaveImage(() => {
+        const image = getDataImage()
+        Events.Tool.publish(Events.Tool.SEND_IMAGE, {image})
+    })
 
     useEffect(() => {
         const canvas = canvasRef.current
@@ -25,27 +47,31 @@ const FreeDraw = props => {
 
         deltaX = offsetLeft
         deltaY = offsetTop
-
-        canvas.addEventListener("touchstart", e => {
-            // mousePos = getTouchPos(const canvasFog, e)
-            const {clientX, clientY} = e.touches[0]
-            const event = new MouseEvent("mousedown", {clientX, clientY})
-            isDrawEnabled = true
-            onMouseDown(event)
-        }, false)
-
-        canvas.addEventListener("touchend", e => {
-            const event = new MouseEvent("mouseup", {})
-            isDrawEnabled = false
-            onMouseUp(event)
-        }, false)
-
-        canvas.addEventListener("touchmove", e => {
-            const {clientX, clientY} = e.touches[0]
-            const event = new MouseEvent("mousemove", {clientX, clientY})
-            onMouseMove(event)
-        }, false)
     }, [])
+
+    function onTouchStart(e) {
+        isDrawEnabled = e.touches.length === 1
+        if (!isDrawEnabled) {
+            return e.preventDefault()
+        }
+        const {clientX, clientY} = e.touches[0]
+        const event = new MouseEvent("mousedown", {clientX, clientY})
+        onMouseDown(event)
+    }
+
+    function onTouchEnd(e) {
+        isDrawEnabled = false
+    }
+
+    function onTouchMove(e) {
+        isDrawEnabled = e.touches.length === 1
+        if (!isDrawEnabled) {
+            return e.preventDefault()
+        }
+        const {clientX, clientY} = e.touches[0]
+        const event = new MouseEvent("mousemove", {clientX, clientY})
+        onMouseMove(event)
+    }
 
     function onMouseOut(e) {
         isDrawEnabled = false
@@ -69,7 +95,8 @@ const FreeDraw = props => {
         if (isDrawEnabled) {
             const canvasContext = canvasRef.current.getContext("2d")
             canvasContext.beginPath()
-            if (drawMode === 'draw') {
+            if (mode === Constants.Tool.FREE_DRAW_MODE_DRAW) {
+                logger.log('Drawing', color, lineWidth)
                 canvasContext.globalCompositeOperation = 'source-over'
                 canvasContext.strokeStyle = color
                 canvasContext.lineWidth = lineWidth
@@ -86,42 +113,6 @@ const FreeDraw = props => {
         }
     }
 
-    function setColor(e) {
-        drawMode = "draw"
-        const {className} = e.target
-        switch (className) {
-            case "green":
-                color = "green"
-                break
-            case "blue":
-                color = "blue"
-                break
-            case "red":
-                color = "red"
-                break
-            case "yellow":
-                color = "yellow"
-                break
-            case "orange":
-                color = "orange"
-                break
-            case "white":
-                color = "white"
-                break
-            default:
-                color = "black"
-        }
-    }
-
-    function resetCanvas() {
-        const canvas = canvasRef.current
-        const {width, height} = canvas
-        const canvasContext = canvas.getContext("2d")
-        canvasContext.fillStyle = "white"
-        canvasContext.fillRect(0, 0, width, height)
-        canvasContext.globalCompositeOperation = 'source-over'
-    }
-
     function getDataImage() {
         const canvasPrint = document.createElement("canvas")
         const canvas = canvasRef.current
@@ -132,31 +123,9 @@ const FreeDraw = props => {
         return canvasPrint.toDataURL('image/png')
     }
 
-    function sendImage() {
-        const image = getDataImage()
-        Events.Tool.publish(Events.Tool.SEND_IMAGE, {image})
-    }
-
     return (
         <div className={"free-draw"}>
-            <div className={"color-chooser"}>
-                <button className={"green"} onClick={setColor}>Green</button>
-                <button className={"blue"} onClick={setColor}>Blue</button>
-                <button className={"red"} onClick={setColor}>Red</button>
-                <button className={"yellow"} onClick={setColor}>Yellow</button>
-                <button className={"orange"} onClick={setColor}>Orange</button>
-                <button className={"black"} onClick={setColor}>Black</button>
-                <button className={"white"} onClick={setColor}>White</button>
-                <button className={"eraser"} onClick={() => drawMode = "eraser"}>Eraser</button>
-                <select onChange={e => lineWidth = e.target.value}>
-                    <option value={"2"}>2</option>
-                    <option value={"10"} selected={true}>10</option>
-                    <option value={"20"}>20</option>
-                </select>
-                <button className={"clear"} onClick={resetCanvas}>Reset</button>
-                <button className={"save"} onClick={sendImage}>Send</button>
-            </div>
-            <canvas ref={canvasRef} onMouseMove={onMouseMove} onMouseDown={onMouseDown} onMouseUp={onMouseUp} onMouseOut={onMouseOut}/>
+            <canvas ref={canvasRef} onMouseMove={onMouseMove} onMouseDown={onMouseDown} onMouseUp={onMouseUp} onMouseOut={onMouseOut} onTouchStart={onTouchStart} onTouchEnd={onTouchEnd} onTouchMove={onTouchMove}/>
         </div>
     )
 }

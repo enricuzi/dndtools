@@ -4,11 +4,22 @@ const Constants = {
     OPEN: 'open',
     Tool: {
         FREE_DRAW: 'free-draw',
+        FREE_DRAW_MODE_ERASER: 'eraser',
+        FREE_DRAW_MODE_DRAW: 'draw',
         UPLOAD_IMAGE: 'upload-image'
     },
     User: {
         MASTER: 'master',
         PLAYER: 'player'
+    },
+    Color: {
+        black: 'black',
+        white: 'white',
+        green: 'green',
+        blue: 'blue',
+        red: 'red',
+        yellow: 'yellow',
+        orange: 'orange'
     }
 }
 

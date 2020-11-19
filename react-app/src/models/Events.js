@@ -18,10 +18,22 @@ const Events = {
     Tool: {
         SELECTED_FREE_DRAW: 'selected-free-draw',
         SELECTED_UPLOAD_IMAGE: 'selected-upload-image',
+        FREE_DRAW_COLOR: 'free-draw-color',
+        FREE_DRAW_MODE: 'free-draw-mode',
+        FREE_DRAW_LINE_WIDTH: 'free-draw-line-width',
+        CLEAR_CANVAS: 'clear-canvas',
         SEND_IMAGE: 'send-image',
+        SAVE_IMAGE: 'save-image',
+        ROLL: 'roll',
         freeDrawSelected: callback => Events.Tool.subscribe(data => data.event === Events.Tool.SELECTED_FREE_DRAW && callback()),
         uploadImageSelected: callback => Events.Tool.subscribe(data => data.event === Events.Tool.SELECTED_UPLOAD_IMAGE && callback(data.image)),
-        onSendImage: callback => Events.Tool.subscribe(data => data.event === Events.Tool.SEND_IMAGE && callback(data.image))
+        onSendImage: callback => Events.Tool.subscribe(data => data.event === Events.Tool.SEND_IMAGE && callback(data.image)),
+        onFreeDrawColor: callback => Events.Tool.subscribe(data => data.event === Events.Tool.FREE_DRAW_COLOR && callback(data.value)),
+        onFreeDrawMode: callback => Events.Tool.subscribe(data => data.event === Events.Tool.FREE_DRAW_MODE && callback(data.value)),
+        onFreeDrawLineWidth: callback => Events.Tool.subscribe(data => data.event === Events.Tool.FREE_DRAW_LINE_WIDTH && callback(data.value)),
+        onClearCanvas: callback => Events.Tool.subscribe(data => data.event === Events.Tool.CLEAR_CANVAS && callback()),
+        onRoll: callback => Events.Tool.subscribe(data => data.event === Events.Tool.ROLL && callback(data.value)),
+        onSaveImage: callback => Events.Tool.subscribe(data => data.event === Events.Tool.SAVE_IMAGE && callback()),
     }
 }
 

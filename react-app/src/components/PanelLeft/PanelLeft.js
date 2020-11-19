@@ -14,7 +14,7 @@ const PanelLeft = props => {
     const [panelState, setPanelState] = useState('')
 
     function onRoll(roll) {
-        props.onRoll && props.onRoll(roll)
+        Events.Tool.publish(Events.Tool.ROLL, {value: roll})
     }
 
     function onFreeDrawSelected() {
@@ -32,19 +32,60 @@ const PanelLeft = props => {
         Events.Panel.publish(panelState ? Events.Panel.PANEL_LEFT_OPENED : Events.Panel.PANEL_LEFT_CLOSED)
     }
 
+    function setFreeDrawColor(e) {
+        const {color} = e.target.dataset
+        logger.log('Color selected', color)
+        Events.Tool.publish(Events.Tool.FREE_DRAW_COLOR, {value: color})
+        Events.Tool.publish(Events.Tool.FREE_DRAW_MODE, {value: Constants.Tool.FREE_DRAW_MODE_DRAW})
+    }
+
+    function setFreeDrawEraser() {
+        Events.Tool.publish(Events.Tool.FREE_DRAW_MODE, {value: Constants.Tool.FREE_DRAW_MODE_ERASER})
+    }
+
+    function setFreeDrawLineWidth(e) {
+        Events.Tool.publish(Events.Tool.FREE_DRAW_LINE_WIDTH, {value: e.target.value})
+    }
+
+    function clearCanvas() {
+        Events.Tool.publish(Events.Tool.CLEAR_CANVAS)
+    }
+
+    function saveImage() {
+        Events.Tool.publish(Events.Tool.SAVE_IMAGE)
+    }
+
     const {user} = props
     return (
         <div className={`panel panel-left ${panelState}`}>
             {
                 user && user.type === "master" ?
                     <div className={`header`}>
-                        <div className={"master-tools"}>
+                        <div className={'master-tools'}>
                             <button onClick={onFreeDrawSelected}>Free Draw</button>
                             <UploadFileButton onChange={onUploadImageSelected}>Upload</UploadFileButton>
                         </div>
                     </div>
                     : null
             }
+
+            <div className={'color-chooser'}>
+                <button className={'green'} data-color={Constants.Color.green} onClick={setFreeDrawColor}>Green</button>
+                <button className={'blue'} data-color={Constants.Color.blue} onClick={setFreeDrawColor}>Blue</button>
+                <button className={'red'} data-color={Constants.Color.red} onClick={setFreeDrawColor}>Red</button>
+                <button className={'yellow'} data-color={Constants.Color.yellow} onClick={setFreeDrawColor}>Yellow</button>
+                <button className={'orange'} data-color={Constants.Color.orange} onClick={setFreeDrawColor}>Orange</button>
+                <button className={'black'} data-color={Constants.Color.black} onClick={setFreeDrawColor}>Black</button>
+                <button className={'white'} data-color={Constants.Color.white} onClick={setFreeDrawColor}>White</button>
+                <button className={'eraser'} onClick={setFreeDrawEraser}>Eraser</button>
+                <select onChange={setFreeDrawLineWidth}>
+                    <option value={'2'}>2</option>
+                    <option value={'10'} selected={true}>10</option>
+                    <option value={'20'}>20</option>
+                </select>
+                <button className={'clear'} onClick={clearCanvas}>Reset</button>
+                <button className={'save'} onClick={saveImage}>Send</button>
+            </div>
 
             <DiceRoller onRoll={onRoll} rolls={user.rolls}/>
             {user.type === "player" ?
