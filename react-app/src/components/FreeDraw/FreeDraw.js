@@ -41,7 +41,7 @@ const FreeDraw = props => {
     useEffect(() => {
         const canvas = canvasRef.current
         canvas.width = window.innerWidth - 10
-        canvas.height = window.innerHeight - 10
+        canvas.height = window.innerHeight - 70
 
         const {offsetLeft, offsetTop} = canvas
 
@@ -123,9 +123,21 @@ const FreeDraw = props => {
         return canvasPrint.toDataURL('image/png')
     }
 
+    function clearCanvas() {
+        Events.Tool.publish(Events.Tool.CLEAR_CANVAS)
+    }
+
+    function saveImage() {
+        Events.Tool.publish(Events.Tool.SAVE_IMAGE)
+    }
+
     return (
         <div className={"free-draw"}>
             <canvas ref={canvasRef} onMouseMove={onMouseMove} onMouseDown={onMouseDown} onMouseUp={onMouseUp} onMouseOut={onMouseOut} onTouchStart={onTouchStart} onTouchEnd={onTouchEnd} onTouchMove={onTouchMove}/>
+            <div className={'action-buttons'}>
+                <button className={'clear'} onClick={clearCanvas}>Reset</button>
+                <button className={'save'} onClick={saveImage}>Send</button>
+            </div>
         </div>
     )
 }

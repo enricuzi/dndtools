@@ -10,39 +10,5 @@
 	flex-wrap: wrap;
 }
 
-.free-draw .color-chooser button,
-.free-draw .color-chooser select {
-	margin: 2px;
-}
-
-.free-draw .color-chooser .green {
-	background-color: green;
-}
-
-.free-draw .color-chooser .blue {
-	background-color: blue;
-}
-
-.free-draw .color-chooser .red {
-	background-color: red;
-}
-
-.free-draw .color-chooser .yellow {
-	background-color: yellow;
-}
-
-.free-draw .color-chooser .orange {
-	background-color: orange;
-}
-
-.free-draw .color-chooser .black {
-	background-color: black;
-	color: white;
-}
-
-.free-draw .color-chooser .white {
-	background-color: white;
-}
-
-.free-draw .color-chooser .eraser {
+.eraser {
 }

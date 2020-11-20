@@ -47,14 +47,6 @@ const PanelLeft = props => {
         Events.Tool.publish(Events.Tool.FREE_DRAW_LINE_WIDTH, {value: e.target.value})
     }
 
-    function clearCanvas() {
-        Events.Tool.publish(Events.Tool.CLEAR_CANVAS)
-    }
-
-    function saveImage() {
-        Events.Tool.publish(Events.Tool.SAVE_IMAGE)
-    }
-
     const {user} = props
     return (
         <div className={`panel panel-left ${panelState}`}>
@@ -83,8 +75,6 @@ const PanelLeft = props => {
                     <option value={'10'} selected={true}>10</option>
                     <option value={'20'}>20</option>
                 </select>
-                <button className={'clear'} onClick={clearCanvas}>Reset</button>
-                <button className={'save'} onClick={saveImage}>Send</button>
             </div>
 
             <DiceRoller onRoll={onRoll} rolls={user.rolls}/>

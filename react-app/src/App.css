@@ -27,3 +27,33 @@ button.save {
 button.clear {
 	background-color: indianred;
 }
+
+.green {
+	background-color: green;
+}
+
+.blue {
+	background-color: blue;
+}
+
+.red {
+	background-color: red;
+}
+
+.yellow {
+	background-color: yellow;
+}
+
+.orange {
+	background-color: orange;
+}
+
+.black {
+	background-color: black;
+	color: white;
+}
+
+.white {
+	background-color: white;
+}
+
