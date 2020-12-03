@@ -50,10 +50,9 @@ const FreeDraw = props => {
     }, [])
 
     function onTouchStart(e) {
+        e.preventDefault()
         isDrawEnabled = e.touches.length === 1
-        if (!isDrawEnabled) {
-            return e.preventDefault()
-        }
+        logger.log('Touch start', isDrawEnabled)
         const {clientX, clientY} = e.touches[0]
         const event = new MouseEvent("mousedown", {clientX, clientY})
         onMouseDown(event)
@@ -64,10 +63,9 @@ const FreeDraw = props => {
     }
 
     function onTouchMove(e) {
+        e.preventDefault()
         isDrawEnabled = e.touches.length === 1
-        if (!isDrawEnabled) {
-            return e.preventDefault()
-        }
+        logger.log('Touch end', isDrawEnabled)
         const {clientX, clientY} = e.touches[0]
         const event = new MouseEvent("mousemove", {clientX, clientY})
         onMouseMove(event)

@@ -1,4 +1,8 @@
 .panel-center {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
     transform: translateX(0);
     transition: transform ease-in-out .3s;
 }

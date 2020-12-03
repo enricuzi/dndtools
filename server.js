@@ -7,6 +7,8 @@ const sio = require('socket.io');
 const favicon = require('serve-favicon');
 const compression = require('compression');
 
+console.log('NODE_ENV', process.env.NODE_ENV)
+
 const app = express(),
 	options = {
 		key: fs.readFileSync(__dirname + '/rtc-video-room-key.pem'),

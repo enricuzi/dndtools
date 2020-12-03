@@ -27,6 +27,11 @@ const PanelLeft = props => {
         Events.Tool.publish(Events.Tool.SELECTED_UPLOAD_IMAGE, {image})
     }
 
+    function onCharacterStats() {
+        togglePanel()
+        Events.Tool.publish(Events.Tool.CHARACTER_STATS)
+    }
+
     function togglePanel() {
         setPanelState(panelState ? '' : Constants.OPEN)
         Events.Panel.publish(panelState ? Events.Panel.PANEL_LEFT_OPENED : Events.Panel.PANEL_LEFT_CLOSED)
@@ -56,6 +61,7 @@ const PanelLeft = props => {
                         <div className={'master-tools'}>
                             <button onClick={onFreeDrawSelected}>Free Draw</button>
                             <UploadFileButton onChange={onUploadImageSelected}>Upload</UploadFileButton>
+                            <button onClick={onCharacterStats}>Characters</button>
                         </div>
                     </div>
                     : null

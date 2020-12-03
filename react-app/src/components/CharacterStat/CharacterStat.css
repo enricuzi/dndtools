@@ -1,0 +1,13 @@
+.character-stat {
+}
+
+.character-stat .column {
+    display: flex;
+    flex-direction: column;
+}
+
+.character-stat .row {
+    display: flex;
+    flex-direction: column;
+    margin: 2px 0
+}

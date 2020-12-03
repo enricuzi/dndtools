@@ -5,6 +5,7 @@ import NoteSection from "../NoteSection/NoteSection"
 import Constants from "../../models/Constants";
 import Events from "../../models/Events";
 import MapLayer from "../MapLayer/MapLayer";
+import CharacterStats from "../CharacterStats/CharacterStats";
 
 const PanelCenter = props => {
 
@@ -18,23 +19,23 @@ const PanelCenter = props => {
         setSourceImage(image.src)
         setSourceAlt(image.alt)
     })
+    Events.Tool.onCharacterStatsSelected(() => setMasterTool(Constants.Tool.CHARACTER_STATS))
 
     const {user} = props
     return (
         <div className={`panel panel-center`}>
             {user.type === Constants.User.MASTER ?
                 <div className={"master-tools"}>
-                    {masterTool === Constants.Tool.FREE_DRAW ?
-                        <FreeDraw/> :
-                        masterTool === Constants.Tool.UPLOAD_IMAGE ?
-                            <MapLayer image={sourceImage} alt={sourceAlt}/> : null}
+                    {masterTool === Constants.Tool.FREE_DRAW ? <FreeDraw /> :
+                        masterTool === Constants.Tool.UPLOAD_IMAGE ? <MapLayer image={sourceImage} alt={sourceAlt} /> :
+                            masterTool === Constants.Tool.CHARACTER_STATS ? <CharacterStats /> : null}
                 </div>
                 : user.type === Constants.User.PLAYER ?
                     <div className={"player-tools"}>
-                        <FreeDraw/>
+                        <FreeDraw />
                     </div>
                     : null}
-            <NoteSection/>
+            <NoteSection />
         </div>
     )
 }

@@ -15,10 +15,6 @@
 
 .home .panel {}
 
-.home .panel-center {
-	flex: 1;
-}
-
 .home .panel-content {
 	overflow: auto;
 	flex: 1
