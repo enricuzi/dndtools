@@ -2,21 +2,24 @@ import React, {useState} from "react"
 import './CharacterStat.css'
 import Events from "../../models/Events";
 import Utils from "../Utils/Utils";
+import Logger from "../Services/Logger";
 
 const CharacterStat = props => {
 
-    const {character} = props
+    const {character, index} = props
     const {name, hp, ca, bonus, dmg, dmgBonus} = character
 
     const [attack, setAttack] = useState(null)
     const [ability, setAbility] = useState(null)
+
+    const logger = new Logger('CharacterStat')
 
     function changeStat(e) {
         e.preventDefault()
         const {innerText} = e.target
         const {attr} = e.target.dataset
         character[attr] = innerText
-        Events.Tool.publish(Events.Tool.CHARACTER_STAT_CHANGE, {value: character})
+        Events.Tool.publish(Events.Tool.CHARACTER_STAT_CHANGE, {value: {character, index}})
     }
 
     function onAttackRoll() {
@@ -28,6 +31,11 @@ const CharacterStat = props => {
     function onAbilityRoll() {
         const value = Utils.roll() + Number(bonus)
         setAbility(value)
+    }
+
+    function removeCharacter() {
+        logger.log('triggering remove', index)
+        Events.Tool.publish(Events.Tool.REMOVE_CHARACTER, {value: index})
     }
 
     return (
@@ -67,6 +75,9 @@ const CharacterStat = props => {
                 <div className={'row'}>
                     <button onClick={onAbilityRoll}>Abilità</button>
                     <span>{ability}</span>
+                </div>
+                <div className={'row'}>
+                    <button onClick={removeCharacter}>Remove</button>
                 </div>
             </div>
         </div>

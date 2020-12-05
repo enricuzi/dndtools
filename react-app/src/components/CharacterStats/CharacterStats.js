@@ -7,47 +7,41 @@ import Storage from "../Services/Storage";
 
 const CharacterStats = props => {
 
-    let characters = Storage.contains('characters') ? Storage.getItem('characters') : []
-    const [showNew, setShowNew] = useState(false)
+    const [characters, setCharacter] = useState(Storage.getItem('characters') || [{}])
 
     const logger = new Logger('CharacterStats')
     logger.log(characters)
 
     useEffect(() => {
-        Events.Tool.onCharacterStatChange(data => {
+        const observableStatChange = Events.Tool.onCharacterStatChange(data => {
             logger.log('Updating stat', data)
-            let found = false
-            characters = characters.map(character => {
-                if (data.name === character.name) {
-                    found = true
-                    return data
-                }
-                return character
-            })
-            if (!found) {
-                characters.push(data)
-            }
+            setCharacter(characters.map((character, index) => index === data.index ? data.character : character))
         })
-    }, [])
+        const observableRemoveCharacter = Events.Tool.onCharacterRemove(data => {
+            logger.log('Remove index', data)
+            const list = characters.filter((character, index) => data !== index)
+            setCharacter(list.length ? list : [{}])
+        })
+        return () => {
+            observableStatChange.unsubscribe()
+            observableRemoveCharacter.unsubscribe()
+        }
+    }, [characters])
 
     function onSaveCharacters() {
         logger.log('Saving stats', characters)
         Storage.save('characters', characters)
-        setShowNew(false)
     }
 
     function onNewStat() {
-        setShowNew(true)
+        setCharacter([...characters, {}])
     }
 
     return (
         <div className={'character-stats'}>
             <div className={'content'}>
                 {
-                    characters.map((character, index) => <CharacterStat key={index} character={character} />)
-                }
-                {
-                    showNew ? <CharacterStat character={{}} /> : null
+                    characters.map((character, index) => <CharacterStat key={index} character={character} index={index} />)
                 }
             </div>
             <div className={'action-buttons'}>
