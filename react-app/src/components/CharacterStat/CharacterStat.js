@@ -1,6 +1,5 @@
 import React, {useState} from "react"
 import './CharacterStat.css'
-import Logger from "../Services/Logger";
 import Events from "../../models/Events";
 import Utils from "../Utils/Utils";
 

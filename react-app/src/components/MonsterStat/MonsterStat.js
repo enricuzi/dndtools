@@ -20,7 +20,6 @@ const MonsterStat = props => {
     function removeMonster() {
         logger.log('triggering remove', index)
         Events.Tool.publish(Events.Tool.REMOVE_MONSTER, {value: index})
-        // props.onRemoveMonster(index)
     }
 
     return (

@@ -11,8 +11,12 @@ const MonsterStats = props => {
     const logger = new Logger('MonsterStats')
 
     useEffect(() => {
-        Events.Tool.onMonsterRemove(index => setMonsters(monsters.filter((item, i) => i !== index)))
-    }, [])
+        const observable = Events.Tool.onMonsterRemove(index => {
+            logger.log('removing monster', index)
+            setMonsters(monsters.filter((item, i) => i !== index))
+        })
+        return () => observable.unsubscribe()
+    }, [monsters])
 
     function onRemoveMonster(index) {
         logger.log('Removing index', index)
