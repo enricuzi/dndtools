@@ -1,14 +1,13 @@
-.character-stats {
+.monster-stats {
     display: flex;
     flex-direction: column;
 }
 
-.character-stats .content {
+.monster-stats .content {
     display: flex;
-    flex-wrap: wrap;
     align-self: center;
 }
 
-.character-stats .action-buttons {
+.monster-stats .action-buttons {
     align-self: flex-end;
 }

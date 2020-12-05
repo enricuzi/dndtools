@@ -10,3 +10,7 @@
 .panel-center.full-width {
     transform: translateX(-260px);
 }
+
+.panel-center .master-tools {
+    width: 100%;
+}

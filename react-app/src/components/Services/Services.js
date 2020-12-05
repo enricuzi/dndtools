@@ -1,5 +1,6 @@
 import io from "socket.io-client";
 import Logger from "./Logger";
+import Utils from "../Utils/Utils";
 
 export default class Services {
 
@@ -7,23 +8,27 @@ export default class Services {
 	static logger = new Logger("Services");
 
 	static init() {
-		if (!this.socket) {
+		if (!this.socket && Utils.isProdEnvironment()) {
 			this.socket = io.connect();
 		}
 		return this.socket;
 	}
 
 	static subscribe(key, callback) {
-		this.logger.log("Subscribing event", key);
-		this.socket.on(key, data => {
-			this.logger.log("Receiving data event for", key, data);
-			callback(data)
-		});
+		if (Utils.isProdEnvironment()) {
+			this.logger.log("Subscribing event", key);
+			this.socket.on(key, data => {
+				this.logger.log("Receiving data event for", key, data);
+				callback(data)
+			});
+		}
 	}
 
 	static publish(key, data) {
-		this.logger.log("Emitting event", key, data);
-		this.socket.emit(key, data);
+		if (Utils.isProdEnvironment()) {
+			this.logger.log("Emitting event", key, data);
+			this.socket.emit(key, data);
+		}
 	}
 
 	static onRoll(callback) {

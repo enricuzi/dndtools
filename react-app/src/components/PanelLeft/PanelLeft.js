@@ -76,9 +76,9 @@ const PanelLeft = props => {
                 <button className={'black'} data-color={Constants.Color.black} onClick={setFreeDrawColor}>Black</button>
                 <button className={'white'} data-color={Constants.Color.white} onClick={setFreeDrawColor}>White</button>
                 <button className={'eraser'} onClick={setFreeDrawEraser}>Eraser</button>
-                <select onChange={setFreeDrawLineWidth}>
+                <select onChange={setFreeDrawLineWidth} value={'10'}>
                     <option value={'2'}>2</option>
-                    <option value={'10'} selected={true}>10</option>
+                    <option value={'10'}>10</option>
                     <option value={'20'}>20</option>
                 </select>
             </div>

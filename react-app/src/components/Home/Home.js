@@ -8,12 +8,13 @@ import PanelLeft from "../PanelLeft/PanelLeft"
 import PanelCenter from "../PanelCenter/PanelCenter"
 import PanelRight from "../PanelRight/PanelRight"
 import Events from "../../models/Events";
+import Utils from "../Utils/Utils";
 
 const Home = props => {
 
     const logger = new Logger("Home")
 
-    const [user, setUser] = useState(Storage.getItem("user", sessionStorage))
+    const [user, setUser] = useState(Utils.isDevEnvironment() ? {type: 'master'} : Storage.getItem("user", sessionStorage))
     const [users, setUsers] = useState([])
 
     Services.init()
@@ -50,7 +51,7 @@ const Home = props => {
         Services.onJoin(users => updateUsers(users))
         Services.onLeave(users => updateUsers(users))
         Services.onRoll(users => updateUsers(users))
-        if (user) {
+        if (user && Utils.isProdEnvironment()) {
             Services.publish("login", user)
         }
     }, [])
@@ -73,15 +74,15 @@ const Home = props => {
         return (
             <div className={"home"}>
                 <div className={"container"}>
-                    <PanelCenter user={user}/>
-                    <PanelLeft user={user} onRoll={sendRoll}/>
-                    <PanelRight user={user} users={users}/>
+                    <PanelCenter user={user} />
+                    <PanelLeft user={user} onRoll={sendRoll} />
+                    <PanelRight user={user} users={users} />
                 </div>
             </div>
         )
     }
     return (
-        <Login/>
+        <Login />
     )
 }
 

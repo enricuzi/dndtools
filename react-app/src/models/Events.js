@@ -23,12 +23,16 @@ const Events = {
         FREE_DRAW_LINE_WIDTH: 'free-draw-line-width',
         CHARACTER_STATS: 'character-stats',
         CHARACTER_STAT_CHANGE: 'character-stat-change',
+        MONSTER_STAT_CHANGE: 'monster-stat-change',
+        REMOVE_MONSTER: 'remove-monster',
         CLEAR_CANVAS: 'clear-canvas',
         SEND_IMAGE: 'send-image',
         SAVE_IMAGE: 'save-image',
         ROLL: 'roll',
-        onCharacterStatChange: callback => Events.Tool.subscribe(data => data.event === Events.Tool.CHARACTER_STAT_CHANGE && callback(data.value))
-,        onCharacterStatsSelected: callback => Events.Tool.subscribe(data => data.event === Events.Tool.CHARACTER_STATS && callback()),
+        onMonsterRemove: callback => Events.Tool.subscribe(data => data.event === Events.Tool.REMOVE_MONSTER && callback(data.value)),
+        onMonsterStatChange: callback => Events.Tool.subscribe(data => data.event === Events.Tool.MONSTER_STAT_CHANGE && callback(data.value)),
+        onCharacterStatChange: callback => Events.Tool.subscribe(data => data.event === Events.Tool.CHARACTER_STAT_CHANGE && callback(data.value)),
+        onCharacterStatsSelected: callback => Events.Tool.subscribe(data => data.event === Events.Tool.CHARACTER_STATS && callback()),
         freeDrawSelected: callback => Events.Tool.subscribe(data => data.event === Events.Tool.SELECTED_FREE_DRAW && callback()),
         uploadImageSelected: callback => Events.Tool.subscribe(data => data.event === Events.Tool.SELECTED_UPLOAD_IMAGE && callback(data.image)),
         onSendImage: callback => Events.Tool.subscribe(data => data.event === Events.Tool.SEND_IMAGE && callback(data.image)),
@@ -42,9 +46,10 @@ const Events = {
 }
 
 Object.keys(Events).forEach(key => {
-    Events[key].event = new Subject()
-    Events[key].subscribe = callback => Events[key].event.asObservable().subscribe(status => callback(status))
-    Events[key].publish = (event, data) => Events[key].event.next({event, ...data})
+    const Event = Events[key]
+    Event.event = new Subject()
+    Event.subscribe = callback => Event.event.asObservable().subscribe(status => callback(status))
+    Event.publish = (event, data) => Event.event.next({event, ...data})
 })
 
 export default Events

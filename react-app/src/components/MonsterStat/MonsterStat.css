@@ -1,21 +1,21 @@
-.character-stat {
+.monster-stat {
     display: flex;
     border: 1px solid grey;
     padding: 20px;
     margin: 5px;
 }
 
-.character-stat .column {
+.monster-stat .column {
     display: flex;
     flex-direction: column;
 }
 
-.character-stat .row {
+.monster-stat .row {
     display: flex;
     align-items: center;
     margin: 2px 0
 }
 
-.character-stat label {
+.monster-stat label {
     min-width: 150px;
 }

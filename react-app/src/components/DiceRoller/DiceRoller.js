@@ -57,8 +57,8 @@ export default class DiceRoller extends Component {
 					</label>
 					<label>
 						<span>Type</span>
-						<select onChange={this.onChangeDiceValue}>
-							{this.values.map((item, index) => <option key={index} value={item} selected={item === value}>{item}</option>)}
+						<select onChange={this.onChangeDiceValue} value={value}>
+							{this.values.map((item, index) => <option key={index} value={item}>{item}</option>)}
 						</select>
 					</label>
 					<label>

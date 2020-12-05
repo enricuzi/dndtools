@@ -4,7 +4,8 @@
   "main": "script.js",
   "scripts": {
     "install": "cd react-app && npm install",
-    "start": "cd react-app && npm run build && cd .. && node server.js"
+    "start": "cd react-app && npm run build && cd .. && node server.js",
+    "dev": "cd react-app && npm start"
   },
   "author": "",
   "license": "ISC",

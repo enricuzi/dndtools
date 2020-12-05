@@ -1,44 +1,36 @@
-import React, {Component} from "react";
+import React, {useRef, useState} from "react";
 import "./NoteSection.css";
 import Storage from "../Services/Storage";
 
-export default class NoteSection extends Component {
+const NoteSection = props => {
 
-	constructor(props) {
-		super(props);
-		this.state = {
-			value: Storage.getItem("note")
-		};
-		this.onSaveText = this.onSaveText.bind(this);
-		this.onClearText = this.onClearText.bind(this);
-		this.setText = this.setText.bind(this);
-	}
+    const [value, setValue] = useState(Storage.getItem("note") || '')
+    let textarea = useRef(null)
 
-	setText() {
-		const {value} = this.content;
-		this.setState({value});
-	}
+    function setText() {
+        const {value} = textarea.current;
+        setValue(value)
+    }
 
-	onSaveText(e) {
-		const {value} = this.content;
-		Storage.save("note", value);
-	}
+    function onSaveText(e) {
+        const {value} = textarea.current;
+        Storage.save("note", value);
+    }
 
-	onClearText(e) {
-		this.content.value = ""
-	}
+    function onClearText(e) {
+        textarea.current.value = ''
+    }
 
-	render() {
-		const {value} = this.state;
-		return (
-			<div className={"note-section"}>
-				<div className={"actions"}>
-					<label>Note</label>
-					<button className={"clear"} onClick={this.onClearText}>Clear</button>
-					<button className={"save"} onClick={this.onSaveText}>Save</button>
-				</div>
-				<textarea value={value} onInput={this.setText} ref={ref => this.content = ref}/>
-			</div>
-		)
-	}
+    return (
+        <div className={"note-section"}>
+            <div className={"actions"}>
+                <label>Note</label>
+                <button className={"clear"} onClick={onClearText}>Clear</button>
+                <button className={"save"} onClick={onSaveText}>Save</button>
+            </div>
+            <textarea value={value} onChange={setText} ref={textarea} />
+        </div>
+    )
 }
+
+export default NoteSection

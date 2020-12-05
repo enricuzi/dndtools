@@ -6,10 +6,11 @@ import Constants from "../../models/Constants";
 import Events from "../../models/Events";
 import MapLayer from "../MapLayer/MapLayer";
 import CharacterStats from "../CharacterStats/CharacterStats";
+import Battle from "../Battle/Battle";
 
 const PanelCenter = props => {
 
-    const [masterTool, setMasterTool] = useState(Constants.Tool.FREE_DRAW)
+    const [masterTool, setMasterTool] = useState(Constants.Tool.CHARACTER_STATS)
     const [sourceImage, setSourceImage] = useState(null)
     const [sourceAlt, setSourceAlt] = useState(null)
 
@@ -28,7 +29,7 @@ const PanelCenter = props => {
                 <div className={"master-tools"}>
                     {masterTool === Constants.Tool.FREE_DRAW ? <FreeDraw /> :
                         masterTool === Constants.Tool.UPLOAD_IMAGE ? <MapLayer image={sourceImage} alt={sourceAlt} /> :
-                            masterTool === Constants.Tool.CHARACTER_STATS ? <CharacterStats /> : null}
+                            masterTool === Constants.Tool.CHARACTER_STATS ? <Battle /> : null}
                 </div>
                 : user.type === Constants.User.PLAYER ?
                     <div className={"player-tools"}>
