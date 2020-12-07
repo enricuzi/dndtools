@@ -5,7 +5,6 @@ import NoteSection from "../NoteSection/NoteSection"
 import Constants from "../../models/Constants";
 import Events from "../../models/Events";
 import MapLayer from "../MapLayer/MapLayer";
-import CharacterStats from "../CharacterStats/CharacterStats";
 import Battle from "../Battle/Battle";
 
 const PanelCenter = props => {

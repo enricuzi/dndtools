@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from "react"
+import React, {useEffect, useMemo, useState} from "react"
 import './MonsterStats.css'
 import Storage from "../Services/Storage";
 import MonsterStat from "../MonsterStat/MonsterStat";
@@ -8,7 +8,7 @@ import Logger from "../Services/Logger";
 const MonsterStats = props => {
 
     const [monsters, setMonsters] = useState(Storage.getItem('monsters', sessionStorage) || [{}])
-    const logger = new Logger('MonsterStats')
+    const logger = useMemo(() => new Logger('MonsterStats'), [])
 
     useEffect(() => {
         const observable = Events.Tool.onMonsterRemove(index => {
@@ -16,7 +16,7 @@ const MonsterStats = props => {
             setMonsters(monsters.filter((item, i) => i !== index))
         })
         return () => observable.unsubscribe()
-    }, [monsters])
+    }, [monsters, logger])
 
     function onRemoveMonster(index) {
         logger.log('Removing index', index)

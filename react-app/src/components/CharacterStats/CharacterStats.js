@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from "react"
+import React, {useEffect, useMemo, useRef, useState} from "react"
 import './CharacterStats.css'
 import CharacterStat from "../CharacterStat/CharacterStat";
 import Logger from "../Services/Logger";
@@ -8,25 +8,26 @@ import Storage from "../Services/Storage";
 const CharacterStats = props => {
 
     const [characters, setCharacter] = useState(Storage.getItem('characters') || [{}])
-
-    const logger = new Logger('CharacterStats')
-    logger.log(characters)
+    const tempList = useRef(characters)
+    const logger = useMemo(() => new Logger('CharacterStats'), [])
+    logger.log('loading characters', characters)
 
     useEffect(() => {
-        const observableStatChange = Events.Tool.onCharacterStatChange(data => {
+        const observable = Events.Tool.onCharacterStatChange(data => {
             logger.log('Updating stat', data)
-            setCharacter(characters.map((character, index) => index === data.index ? data.character : character))
+            tempList.current = tempList.current.map((character, index) => index === data.index ? data.character : character)
         })
-        const observableRemoveCharacter = Events.Tool.onCharacterRemove(data => {
+        return () => observable.unsubscribe()
+    }, [logger])
+
+    useEffect(() => {
+        const observable = Events.Tool.onCharacterRemove(data => {
             logger.log('Remove index', data)
             const list = characters.filter((character, index) => data !== index)
             setCharacter(list.length ? list : [{}])
         })
-        return () => {
-            observableStatChange.unsubscribe()
-            observableRemoveCharacter.unsubscribe()
-        }
-    }, [characters])
+        return () => observable.unsubscribe()
+    }, [characters, logger])
 
     function onSaveCharacters() {
         logger.log('Saving stats', characters)

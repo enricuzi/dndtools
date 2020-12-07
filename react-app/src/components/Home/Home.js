@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from "react"
+import React, {useEffect, useMemo, useState} from "react"
 import "./Home.css"
 import Login from "../Login/Login"
 import Storage from "../Services/Storage"
@@ -12,7 +12,7 @@ import Utils from "../Utils/Utils";
 
 const Home = props => {
 
-    const logger = new Logger("Home")
+    const logger = useMemo(() => new Logger("Home"), [])
 
     const [user, setUser] = useState(Utils.isDevEnvironment() ? {type: 'master'} : Storage.getItem("user", sessionStorage))
     const [users, setUsers] = useState([])
