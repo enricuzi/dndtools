@@ -29,7 +29,7 @@ const Constants = {
         INTELLIGENCE: 'intelligence',
         WISDOM: 'wisdom',
         CHARISMA: 'charisma'
-    }
+    },
 }
 
 export default Constants

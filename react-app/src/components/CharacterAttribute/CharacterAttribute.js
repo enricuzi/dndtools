@@ -27,7 +27,7 @@ const CharacterAttribute = props => {
 
     useEffect(() => {
         logger.log('changing attribute', id, value, bonus, extra)
-        Events.Character.publish(Events.Character.ATTRIBUTE_BONUS_CHANGE, {
+        Events.publish(Events.AttributeBonusChange, {
             value: {
                 attribute: id,
                 value, bonus, extra

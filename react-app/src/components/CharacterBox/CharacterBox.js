@@ -19,7 +19,7 @@ const CharacterBox = props => {
         const {innerText} = e.target
         const {attr} = e.target.dataset
         character[attr] = innerText
-        Events.Tool.publish(Events.Tool.CHARACTER_STAT_CHANGE, {value: {character, index}})
+        Events.publish(Events.CharacterStatChange, {character, index})
     }
 
     function onAttackRoll() {
@@ -35,7 +35,7 @@ const CharacterBox = props => {
 
     function removeCharacter() {
         logger.log('triggering remove', index)
-        Events.Tool.publish(Events.Tool.REMOVE_CHARACTER, {value: index})
+        Events.publish(Events.RemoveCharacter, index)
     }
 
     return (

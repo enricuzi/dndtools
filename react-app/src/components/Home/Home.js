@@ -19,7 +19,7 @@ const Home = props => {
 
     Services.init()
 
-    Events.Tool.onSendImage(image => {
+    Events.onSendImage(image => {
         logger.log("Uploading image...")
         Services.publish("upload", {
             image: image,
@@ -31,12 +31,12 @@ const Home = props => {
      * onLoginSuccess
      * @param user: {type: "master|player", id: "[username]"}
      */
-    Events.User.login(user => {
+    Events.onLogIn(user => {
         Storage.save("user", user, sessionStorage)
         Services.publish("login", user)
         setUser(user)
     })
-    Events.User.logout(() => {
+    Events.onLogOut(() => {
         Storage.remove("user", sessionStorage)
         Services.publish("logout", user)
         setUser(null)
@@ -56,25 +56,32 @@ const Home = props => {
         }
     }, [])
 
+    useEffect(() => {
+        const obsRoll = Events.onRoll(value => {
+            user.rolls = user.rolls || []
+            user.rolls.splice(0, 0, value)
+            logger.log("Sending roll", value, user)
+            setUser(user)
+            const {id} = user
+            Services.publish("roll", {id, rolls: user.rolls})
+        })
+        Events.onAttributeBonusChange(value => {
+        })
+        return () => {
+            obsRoll.unsubscribe()
+        }
+    }, [user])
+
     function updateUsers(users) {
         logger.log("Updating users...", users)
         setUsers(users)
-    }
-
-    function sendRoll(roll) {
-        user.rolls = user.rolls || []
-        user.rolls.splice(0, 0, roll)
-        logger.log("Sending roll", roll, user)
-        setUser(user)
-        const {id} = user
-        Services.publish("roll", {id, rolls: user.rolls})
     }
 
     if (user) {
         return (
             <div className={"home"}>
                 <PanelCenter user={user} />
-                <PanelLeft user={user} onRoll={sendRoll} />
+                <PanelLeft user={user} />
                 <PanelRight user={user} users={users} />
             </div>
         )

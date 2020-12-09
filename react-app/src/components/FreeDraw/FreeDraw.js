@@ -19,13 +19,13 @@ const FreeDraw = props => {
     const [mode, setMode] = useState(Constants.Tool.FREE_DRAW_MODE_DRAW)
     const [lineWidth, setLineWidth] = useState(10)
 
-    Events.Tool.onFreeDrawColor(value => {
+    Events.onFreeDrawColor(value => {
         logger.log('Setting color to', value)
         setColor(value)
     })
-    Events.Tool.onFreeDrawLineWidth(value => setLineWidth(value))
-    Events.Tool.onFreeDrawMode(value => setMode(value))
-    Events.Tool.onClearCanvas(() => {
+    Events.onFreeDrawLineWidth(value => setLineWidth(value))
+    Events.onFreeDrawMode(value => setMode(value))
+    Events.onClearCanvas(() => {
         const canvas = canvasRef.current
         const {width, height} = canvas
         const canvasContext = canvas.getContext("2d")
@@ -33,9 +33,9 @@ const FreeDraw = props => {
         canvasContext.fillRect(0, 0, width, height)
         canvasContext.globalCompositeOperation = 'source-over'
     })
-    Events.Tool.onSaveImage(() => {
+    Events.onSaveImage(() => {
         const image = getDataImage()
-        Events.Tool.publish(Events.Tool.SEND_IMAGE, {image})
+        Events.publish(Events.SendImage, {image})
     })
 
     useEffect(() => {
@@ -122,11 +122,11 @@ const FreeDraw = props => {
     }
 
     function clearCanvas() {
-        Events.Tool.publish(Events.Tool.CLEAR_CANVAS)
+        Events.publish(Events.ClearCanvas)
     }
 
     function saveImage() {
-        Events.Tool.publish(Events.Tool.SAVE_IMAGE)
+        Events.publish(Events.SaveImage)
     }
 
     return (

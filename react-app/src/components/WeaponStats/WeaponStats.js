@@ -9,7 +9,7 @@ const WeaponStats = props => {
     const logger = useMemo(() => new Logger('WeaponStats'), [])
 
     useEffect(() => {
-        const observer = Events.Character.onRemoveWeapon(value => {
+        const observer = Events.onRemoveWeapon(value => {
             logger.log('removing spell', value)
             setWeapons(weapons.filter((item, index) => index !== value))
         })
@@ -18,7 +18,7 @@ const WeaponStats = props => {
 
     function save() {
         logger.log('saving weapons', weapons)
-        Events.Character.publish(Events.Character.SAVE_WEAPON, {value: weapons})
+        Events.publish(Events.SaveWeapon, weapons)
     }
 
     function addWeapon() {

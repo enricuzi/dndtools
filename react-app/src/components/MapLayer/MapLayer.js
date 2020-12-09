@@ -67,7 +67,7 @@ const MapLayer = props => {
 
     function sendImage() {
         const image = getDataImage()
-        Events.Tool.publish(Events.Tool.SEND_IMAGE, {image})
+        Events.publish(Events.SendImage, {image})
     }
 
     function showMap() {

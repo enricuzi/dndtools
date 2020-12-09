@@ -11,7 +11,7 @@ const MonsterBoxes = props => {
     const logger = useMemo(() => new Logger('MonsterBoxes'), [])
 
     useEffect(() => {
-        const observable = Events.Tool.onMonsterRemove(index => {
+        const observable = Events.onMonsterRemove(index => {
             logger.log('removing monster', index)
             setMonsters(monsters.filter((item, i) => i !== index))
         })

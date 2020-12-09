@@ -14,12 +14,12 @@ const MonsterBox = props => {
         const {innerText} = e.target
         const {attr} = e.target.dataset
         monster[attr] = innerText
-        Events.Tool.publish(Events.Tool.MONSTER_STAT_CHANGE, {value: {monster, index}})
+        Events.publish(Events.MonsterStatChange, {monster, index})
     }
 
     function removeMonster() {
         logger.log('triggering remove', index)
-        Events.Tool.publish(Events.Tool.REMOVE_MONSTER, {value: index})
+        Events.publish(Events.RemoveMonster, index)
     }
 
     return (

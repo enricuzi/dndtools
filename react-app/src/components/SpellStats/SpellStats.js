@@ -9,7 +9,7 @@ const SpellStats = props => {
     const logger = useMemo(() => new Logger('SpellStats'), [])
 
     useEffect(() => {
-        const observer = Events.Character.onRemoveSpell(value => {
+        const observer = Events.onRemoveSpell(value => {
             logger.log('removing spell', value)
             setSpells(spells.filter((item, index) => index !== value))
         })
@@ -22,7 +22,7 @@ const SpellStats = props => {
 
     function save() {
         logger.log('saving spells', spells)
-        Events.Character.publish(Events.Character.SAVE_SPELL, {value: spells})
+        Events.publish(Events.SaveSpell, spells)
     }
 
     return (

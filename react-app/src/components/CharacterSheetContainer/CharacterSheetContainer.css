@@ -1,6 +1,9 @@
 .character-sheet {
 }
 
+.character-sheet .container {
+}
+
 .character-sheet textarea {
 	width: 100%;
 	height: 400px;

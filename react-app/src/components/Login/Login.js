@@ -22,13 +22,13 @@ export default class Login extends Component {
         Services.doPost("/login", this.state).then(data => {
             data = {type: data.type, id: this.state.username}
             this.logger.log("Login success", data)
-            Events.User.publish(Events.User.LOG_IN, {user: data})
+            Events.publish(Events.LogIn, data)
         }).catch(() => this.logger.error("Failed to login"))
     }
 
     logout(e) {
         this.logger.log("Logging out")
-        Events.User.publish(Events.User.LOG_OUT)
+        Events.publish(Events.LogOut)
     }
 
     render() {

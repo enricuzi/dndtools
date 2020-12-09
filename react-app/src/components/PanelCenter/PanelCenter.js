@@ -14,13 +14,12 @@ const PanelCenter = props => {
     const [sourceImage, setSourceImage] = useState(null)
     const [sourceAlt, setSourceAlt] = useState(null)
 
-    Events.Tool.freeDrawSelected(() => setMasterTool(Constants.Tool.FREE_DRAW))
-    Events.Tool.uploadImageSelected(image => {
+    Events.onFreeDrawSelected(() => setMasterTool(Constants.Tool.FREE_DRAW))
+    Events.onUploadImageSelected(image => {
         setMasterTool(Constants.Tool.UPLOAD_IMAGE)
         setSourceImage(image.src)
         setSourceAlt(image.alt)
     })
-    Events.Tool.onCharacterStatsSelected(() => setMasterTool(Constants.Tool.CHARACTER_STATS))
 
     const {user} = props
     return (

@@ -16,7 +16,7 @@ const SpellStat = props => {
 
     function remove() {
         logger.log('removing spell', index)
-        Events.Character.publish(Events.Character.REMOVE_SPELL, {value: index})
+        Events.publish(Events.RemoveSpell, index)
     }
 
     function save(e) {
@@ -24,7 +24,7 @@ const SpellStat = props => {
         const {attr} = e.target.dataset
         value[attr] = text
         logger.log('saving spell', value)
-        Events.Character.publish(Events.Character.SAVE_SPELL, {value})
+        Events.publish(Events.SaveSpell, {value})
     }
 
     return (

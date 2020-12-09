@@ -31,7 +31,7 @@ const WeaponStat = props => {
 
     function remove() {
         logger.log('removing spell', index)
-        Events.Character.publish(Events.Character.REMOVE_WEAPON, {value: index})
+        Events.publish(Events.RemoveWeapon, index)
     }
 
     function save(e) {
@@ -40,7 +40,7 @@ const WeaponStat = props => {
         value[attr] = text
         updateValue()
         logger.log('saving', value)
-        Events.Character.publish(Events.Character.SAVE_WEAPON, {value})
+        Events.publish(Events.SaveWeapon, value)
     }
 
     function saveAttribute(e) {
@@ -48,7 +48,7 @@ const WeaponStat = props => {
         setAttribute(attribute)
         value.attribute = attribute
         logger.log('saving', value)
-        Events.Character.publish(Events.Character.SAVE_WEAPON, {value})
+        Events.publish(Events.SaveWeapon, value)
     }
 
     return (

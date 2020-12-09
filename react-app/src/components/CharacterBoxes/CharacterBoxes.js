@@ -13,7 +13,7 @@ const CharacterBoxes = props => {
     logger.log('loading characters', characters)
 
     useEffect(() => {
-        const observable = Events.Tool.onCharacterStatChange(data => {
+        const observable = Events.onCharacterStatChange(data => {
             logger.log('Updating stat', data)
             tempList.current = tempList.current.map((character, index) => index === data.index ? data.character : character)
         })
@@ -21,7 +21,7 @@ const CharacterBoxes = props => {
     }, [logger])
 
     useEffect(() => {
-        const observable = Events.Tool.onCharacterRemove(data => {
+        const observable = Events.onCharacterRemove(data => {
             logger.log('Remove index', data)
             const list = characters.filter((character, index) => data !== index)
             setCharacter(list.length ? list : [{}])

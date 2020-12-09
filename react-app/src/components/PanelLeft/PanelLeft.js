@@ -14,42 +14,42 @@ const PanelLeft = props => {
     const [panelState, setPanelState] = useState('')
 
     function onRoll(roll) {
-        Events.Tool.publish(Events.Tool.ROLL, {value: roll})
+        Events.publish(Events.Roll, roll)
     }
 
     function onFreeDrawSelected() {
         togglePanel()
-        Events.Tool.publish(Events.Tool.SELECTED_FREE_DRAW)
+        Events.publish(Events.SelectedFreeDraw)
     }
 
     function onUploadImageSelected(image) {
         togglePanel()
-        Events.Tool.publish(Events.Tool.SELECTED_UPLOAD_IMAGE, {image})
+        Events.publish(Events.SelectedUploadImage, image)
     }
 
     function onCharacterStats() {
         togglePanel()
-        Events.Tool.publish(Events.Tool.CHARACTER_STATS)
+        Events.publish(Events.CHARACTER_STATS)
     }
 
     function togglePanel() {
         setPanelState(panelState ? '' : Constants.OPEN)
-        Events.Panel.publish(panelState ? Events.Panel.PANEL_LEFT_OPENED : Events.Panel.PANEL_LEFT_CLOSED)
+        Events.publish(panelState ? Events.PanelLeftOpened : Events.PanelLeftClosed)
     }
 
     function setFreeDrawColor(e) {
         const {color} = e.target.dataset
         logger.log('Color selected', color)
-        Events.Tool.publish(Events.Tool.FREE_DRAW_COLOR, {value: color})
-        Events.Tool.publish(Events.Tool.FREE_DRAW_MODE, {value: Constants.Tool.FREE_DRAW_MODE_DRAW})
+        Events.publish(Events.FreeDrawColor, color)
+        Events.publish(Events.FreeDrawMode, Constants.Tool.FREE_DRAW_MODE_DRAW)
     }
 
     function setFreeDrawEraser() {
-        Events.Tool.publish(Events.Tool.FREE_DRAW_MODE, {value: Constants.Tool.FREE_DRAW_MODE_ERASER})
+        Events.publish(Events.FreeDrawMode, Constants.Tool.FREE_DRAW_MODE_ERASER)
     }
 
     function setFreeDrawLineWidth(e) {
-        Events.Tool.publish(Events.Tool.FREE_DRAW_LINE_WIDTH, {value: e.target.value})
+        Events.publish(Events.FreeDrawLineWidth, e.target.value)
     }
 
     const {user} = props
