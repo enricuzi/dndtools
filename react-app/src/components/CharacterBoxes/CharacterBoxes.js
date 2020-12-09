@@ -1,11 +1,11 @@
 import React, {useEffect, useMemo, useRef, useState} from "react"
-import './CharacterStats.css'
-import CharacterStat from "../CharacterStat/CharacterStat";
+import './CharacterBoxes.css'
+import CharacterBox from "../CharacterBox/CharacterBox";
 import Logger from "../Services/Logger";
 import Events from "../../models/Events";
 import Storage from "../Services/Storage";
 
-const CharacterStats = props => {
+const CharacterBoxes = props => {
 
     const [characters, setCharacter] = useState(Storage.getItem('characters') || [{}])
     const tempList = useRef(characters)
@@ -39,10 +39,13 @@ const CharacterStats = props => {
     }
 
     return (
-        <div className={'character-stats'}>
-            <div className={'content'}>
+        <div className={'character-boxes'}>
+            <div className={'container'}>
                 {
-                    characters.map((character, index) => <CharacterStat key={index} character={character} index={index} />)
+                    characters.map((character, index) =>
+                        <div key={index} className={'column'}>
+                            <CharacterBox character={character} index={index} />
+                        </div>)
                 }
             </div>
             <div className={'action-buttons'}>
@@ -53,4 +56,4 @@ const CharacterStats = props => {
     )
 }
 
-export default CharacterStats
+export default CharacterBoxes

@@ -1,0 +1,13 @@
+.character-box {
+    border: 1px solid grey;
+    padding: 20px;
+    margin: 5px;
+}
+
+.character-box .row {
+    flex-direction: column;
+}
+
+.character-box label {
+    min-width: 150px;
+}

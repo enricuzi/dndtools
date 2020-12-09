@@ -1,74 +1,55 @@
-import React, {Component} from "react";
-import "./CharacterSheetContainer.css";
-import Storage from "../Services/Storage";
-import CharacterFeature from "../CharacterFeature/CharacterFeature";
+import React, {useRef, useState} from 'react';
+import './CharacterSheetContainer.css';
+import CharacterAttributes from "../CharacterAttributes/CharacterAttributes";
+import WeaponStats from "../WeaponStats/WeaponStats";
+import SpellStats from "../SpellStats/SpellStats";
 
-export default class CharacterSheetContainer extends Component {
+const CharacterSheetContainer = props => {
 
-	constructor(props) {
-		super(props);
-		this.state = {
-			character: Storage.getItem("character") || {
-				features: [
-					{id: "str", label: "Strength"},
-					{id: "dex", label: "Dexterity"},
-					{id: "con", label: "Constitution"},
-					{id: "int", label: "Intelligence"},
-					{id: "wis", label: "Wisdom"},
-					{id: "cha", label: "Charisma"},
-				],
-				extra: ""
-			}
-		};
-		this.setText = this.setText.bind(this);
-		this.saveText = this.saveText.bind(this);
-		this.clearText = this.clearText.bind(this);
-		this.setFeature = this.setFeature.bind(this);
-		this.saveFeatures = this.saveFeatures.bind(this);
-	}
+    const [character, setCharacter] = useState({
+        note: ''
+    })
 
-	setText() {
-		const {value} = this.extra;
-		const {character} = this.state;
-		character.extra = value;
-		this.setState({character});
-	}
+    const noteRef = useRef(null)
 
-	saveText() {
-		const {value} = this.extra;
-		const character = this.state;
-		character.extra = value;
-		Storage.save("character", character);
-	}
+    function setNote() {
+        const {value} = noteRef.current;
+        character.note = value;
+        setCharacter(character)
+    }
 
-	clearText(e) {
-		this.extra.value = ""
-	}
+    function clearText() {
+        noteRef.current.value = ''
+    }
 
-	setFeature(feat) {
-		const {features} = this.state.character;
-		features.find(item => item.id === feat.id).value = feat.value;
-		Storage.save("character", this.state.character);
-	}
-
-	saveFeatures() {}
-
-	render() {
-		const {extra, features} = this.state.character;
-		return (
-			<div className={"character-sheet"}>
-				<label>Character</label>
-				<div className={"features"}>
-					{features.map((item, index) => {
-						const {id, label, value} = item;
-						return (<CharacterFeature key={index} id={id} label={label} value={value} onChange={this.setFeature}/>)
-					})}
-					<button className={"save"}>Save</button>
-				</div>
-				<textarea value={extra} onInput={this.setText} ref={ref => this.extra = ref}/>
-				<button className={"clear"} onClick={this.clearText}>Clear</button>
-				<button className={"save"} onClick={this.saveText}>Save</button>
-			</div>
-		)
-	}
+    return (
+        <div className={'character-sheet'}>
+            <div className={'row'}>
+                <div className={'column'}>
+                    <CharacterAttributes />
+                </div>
+                <div className={'column'}>
+                    <div className={'row'}>
+                        <WeaponStats />
+                    </div>
+                </div>
+                <div className={'column'}>
+                    <div className={'row'}>
+                        <SpellStats />
+                    </div>
+                </div>
+            </div>
+            <div className={'row'}>
+                <fieldset>
+                    <legend>Notes</legend>
+                    <textarea value={character.note} onChange={setNote} ref={noteRef} />
+                </fieldset>
+            </div>
+            <div className={'action-buttons'}>
+                <button className={'clear'} onClick={clearText}>Clear</button>
+            </div>
+        </div>
+    )
 }
+
+export default CharacterSheetContainer

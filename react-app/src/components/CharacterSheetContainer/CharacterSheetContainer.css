@@ -1,13 +1,8 @@
 .character-sheet {
-	margin: 10px 0
 }
 
 .character-sheet textarea {
 	width: 100%;
 	height: 400px;
 	padding: 10px;
-}
-
-.character-sheet button {
-	width: 50%;
 }

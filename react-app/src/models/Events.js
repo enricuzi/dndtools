@@ -44,6 +44,18 @@ const Events = {
         onClearCanvas: callback => Events.Tool.subscribe(data => data.event === Events.Tool.CLEAR_CANVAS && callback()),
         onRoll: callback => Events.Tool.subscribe(data => data.event === Events.Tool.ROLL && callback(data.value)),
         onSaveImage: callback => Events.Tool.subscribe(data => data.event === Events.Tool.SAVE_IMAGE && callback()),
+    },
+    Character: {
+        SAVE_WEAPON: 'save-weapon',
+        REMOVE_WEAPON: 'remove-weapon',
+        SAVE_SPELL: 'save-spell',
+        REMOVE_SPELL: 'remove-spell',
+        ATTRIBUTE_BONUS_CHANGE: 'attribute-bonus-change',
+        onAttributeBonusChange: callback => Events.Character.subscribe(data => data.event === Events.Character.ATTRIBUTE_BONUS_CHANGE && callback(data.value)),
+        onSaveWeapon: callback => Events.Character.subscribe(data => data.event === Events.Character.SAVE_WEAPON && callback(data.value)),
+        onRemoveWeapon: callback => Events.Character.subscribe(data => data.event === Events.Character.REMOVE_WEAPON && callback(data.value)),
+        onSaveSpell: callback => Events.Character.subscribe(data => data.event === Events.Character.SAVE_SPELL && callback(data.value)),
+        onRemoveSpell: callback => Events.Character.subscribe(data => data.event === Events.Character.REMOVE_SPELL && callback(data.value)),
     }
 }
 

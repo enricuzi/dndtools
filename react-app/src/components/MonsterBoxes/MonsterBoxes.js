@@ -1,14 +1,14 @@
 import React, {useEffect, useMemo, useState} from "react"
-import './MonsterStats.css'
+import './MonsterBoxes.css'
 import Storage from "../Services/Storage";
-import MonsterStat from "../MonsterStat/MonsterStat";
+import MonsterBox from "../MonsterBox/MonsterBox";
 import Events from "../../models/Events";
 import Logger from "../Services/Logger";
 
-const MonsterStats = props => {
+const MonsterBoxes = props => {
 
     const [monsters, setMonsters] = useState(Storage.getItem('monsters', sessionStorage) || [{}])
-    const logger = useMemo(() => new Logger('MonsterStats'), [])
+    const logger = useMemo(() => new Logger('MonsterBoxes'), [])
 
     useEffect(() => {
         const observable = Events.Tool.onMonsterRemove(index => {
@@ -18,21 +18,18 @@ const MonsterStats = props => {
         return () => observable.unsubscribe()
     }, [monsters, logger])
 
-    function onRemoveMonster(index) {
-        logger.log('Removing index', index)
-        setMonsters(monsters.filter((item, i) => i !== index))
-    }
-
     function addMonster() {
         setMonsters([...monsters, {}])
     }
 
     return (
-        <div className={'monster-stats'}>
-            <div className={'content'}>
+        <div className={'monster-boxes'}>
+            <div className={'container'}>
                 {
                     monsters.map((monster, index) =>
-                        <MonsterStat onRemoveMonster={onRemoveMonster} key={index} monster={monster} index={index} />)
+                        <div key={index} className={'column'}>
+                            <MonsterBox monster={monster} index={index} />
+                        </div>)
                 }
             </div>
             <div className={'action-buttons'}>
@@ -42,4 +39,4 @@ const MonsterStats = props => {
     )
 }
 
-export default MonsterStats
+export default MonsterBoxes

@@ -1,0 +1,13 @@
+.monster-box {
+    border: 1px solid grey;
+    padding: 20px;
+    margin: 5px;
+}
+
+.monster-box label {
+    min-width: 150px;
+}
+
+.monster-box .row {
+    flex-direction: column;
+}

@@ -21,6 +21,14 @@ const Constants = {
         red: 'red',
         yellow: 'yellow',
         orange: 'orange'
+    },
+    Attributes: {
+        STRENGTH: 'strength',
+        DEXTERITY: 'dexterity',
+        CONSTITUTION: 'constitution',
+        INTELLIGENCE: 'intelligence',
+        WISDOM: 'wisdom',
+        CHARISMA: 'charisma'
     }
 }
 

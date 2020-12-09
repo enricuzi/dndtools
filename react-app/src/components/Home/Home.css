@@ -9,10 +9,6 @@
 	justify-content: center;
 }
 
-.home .container {
-	display: flex;
-}
-
 .home .panel {}
 
 .home .panel-content {

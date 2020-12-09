@@ -1,15 +1,15 @@
 import React from "react"
-import CharacterStats from "../CharacterStats/CharacterStats";
-import MonsterStats from "../MonsterStats/MonsterStats";
+import CharacterBoxes from "../CharacterBoxes/CharacterBoxes";
+import MonsterBoxes from "../MonsterBoxes/MonsterBoxes";
 
 const Battle = props => {
     return (
         <div className={'battle'}>
             <div className={'row'}>
-                <CharacterStats />
+                <CharacterBoxes />
             </div>
             <div className={'row'}>
-                <MonsterStats />
+                <MonsterBoxes />
             </div>
         </div>
     )

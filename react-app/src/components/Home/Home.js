@@ -73,11 +73,9 @@ const Home = props => {
     if (user) {
         return (
             <div className={"home"}>
-                <div className={"container"}>
-                    <PanelCenter user={user} />
-                    <PanelLeft user={user} onRoll={sendRoll} />
-                    <PanelRight user={user} users={users} />
-                </div>
+                <PanelCenter user={user} />
+                <PanelLeft user={user} onRoll={sendRoll} />
+                <PanelRight user={user} users={users} />
             </div>
         )
     }
