@@ -13,13 +13,17 @@ const CharacterBox = props => {
     const [ability, setAbility] = useState(null)
 
     const logger = new Logger('CharacterBox')
+    let timer
 
     function changeStat(e) {
         e.preventDefault()
         const {innerText} = e.target
         const {attr} = e.target.dataset
-        character[attr] = innerText
-        Events.publish(Events.CharacterStatChange, {character, index})
+        clearTimeout(timer)
+        Utils.delay(500, () => {
+            character[attr] = innerText
+            Events.publish(Events.CharacterStatChange, {character, index})
+        })
     }
 
     function onAttackRoll() {
@@ -40,28 +44,28 @@ const CharacterBox = props => {
 
     return (
         <fieldset className={'character-box'}>
-            <legend contentEditable={true} suppressContentEditableWarning={true} data-attr={'name'} onInput={changeStat}>{name || '-'}</legend>
+            <legend contentEditable={true} suppressContentEditableWarning={true} data-attr={'name'} onInput={changeStat}>{name}</legend>
             <div className={'row'}>
                 <label>Punti Vita</label>
-                <span contentEditable={true} suppressContentEditableWarning={true} data-attr={'hp'} onInput={changeStat}>{hp || '-'}</span>
+                <span contentEditable={true} suppressContentEditableWarning={true} data-attr={'hp'} onInput={changeStat}>{hp}</span>
             </div>
             <div className={'row'}>
                 <label>Armatura</label>
-                <span contentEditable={true} suppressContentEditableWarning={true} data-attr={'ca'} onInput={changeStat}>{ca || '-'}</span>
+                <span contentEditable={true} suppressContentEditableWarning={true} data-attr={'ca'} onInput={changeStat}>{ca}</span>
             </div>
             <div className={'row'}>
                 <label>Bonus Classe</label>
-                <span contentEditable={true} suppressContentEditableWarning={true} data-attr={'bonus'} onInput={changeStat}>{bonus || '-'}</span>
+                <span contentEditable={true} suppressContentEditableWarning={true} data-attr={'bonus'} onInput={changeStat}>{bonus}</span>
             </div>
             <div className={'row'}>
                 <div className={'column'}>
                     <div className={'row'}>
                         <label>Danno</label>
-                        <span contentEditable={true} suppressContentEditableWarning={true} data-attr={'dmg'} onInput={changeStat}>{dmg || '-'}</span>
+                        <span contentEditable={true} suppressContentEditableWarning={true} data-attr={'dmg'} onInput={changeStat}>{dmg}</span>
                     </div>
                     <div className={'row'}>
                         <label>Bonus</label>
-                        <span contentEditable={true} suppressContentEditableWarning={true} data-attr={'dmgBonus'} onInput={changeStat}>{dmgBonus || '-'}</span>
+                        <span contentEditable={true} suppressContentEditableWarning={true} data-attr={'dmgBonus'} onInput={changeStat}>{dmgBonus}</span>
                     </div>
                 </div>
             </div>

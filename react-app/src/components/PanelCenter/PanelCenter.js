@@ -6,7 +6,7 @@ import Constants from "../../models/Constants";
 import Events from "../../models/Events";
 import MapLayer from "../MapLayer/MapLayer";
 import Battle from "../Battle/Battle";
-import CharacterSheetContainer from "../CharacterSheetContainer/CharacterSheetContainer";
+import CharacterSheets from "../CharacterSheets/CharacterSheets";
 
 const PanelCenter = props => {
 
@@ -35,7 +35,7 @@ const PanelCenter = props => {
                         <FreeDraw />
                     </div>
                     : null}
-                    <CharacterSheetContainer/>
+            <CharacterSheets />
             <NoteSection />
         </div>
     )

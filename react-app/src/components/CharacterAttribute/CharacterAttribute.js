@@ -6,16 +6,16 @@ import Events from "../../models/Events";
 
 const CharacterAttribute = props => {
 
-    const {id, label} = props
-    const [value, setValue] = useState(props.value || 10)
-    const [bonus, setBonus] = useState(Utils.getFeatureBonus(value))
-    const [extra, setExtra] = useState(0)
+    const {id, label} = props.data
+    const [value, setValue] = useState(props.data.value || 10)
+    const [bonus, setBonus] = useState(Utils.getAttributeBonus(value))
+    const [extra, setExtra] = useState(props.data.extra || 0)
 
     const logger = useMemo(() => new Logger('CharacterAttribute'), [])
 
     function onChange(e) {
         const {value} = e.target;
-        const bonus = Utils.getFeatureBonus(value);
+        const bonus = Utils.getAttributeBonus(value);
         setValue(value)
         setBonus(bonus)
     }
@@ -27,12 +27,7 @@ const CharacterAttribute = props => {
 
     useEffect(() => {
         logger.log('changing attribute', id, value, bonus, extra)
-        Events.publish(Events.AttributeBonusChange, {
-            value: {
-                attribute: id,
-                value, bonus, extra
-            }
-        })
+        Events.publish(Events.AttributeBonusChange, {id, value, bonus, extra})
     }, [value, bonus, extra, id, logger])
 
     return (

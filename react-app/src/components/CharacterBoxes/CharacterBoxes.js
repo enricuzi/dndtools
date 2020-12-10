@@ -7,10 +7,9 @@ import Storage from "../Services/Storage";
 
 const CharacterBoxes = props => {
 
-    const [characters, setCharacter] = useState(Storage.getItem('characters') || [{}])
+    const [characters, setCharacter] = useState(Storage.getItem('characterBoxes') || [{}])
     const tempList = useRef(characters)
-    const logger = useMemo(() => new Logger('CharacterStats'), [])
-    logger.log('loading characters', characters)
+    const logger = useMemo(() => new Logger('CharacterBoxes'), [])
 
     useEffect(() => {
         const observable = Events.onCharacterStatChange(data => {
@@ -31,7 +30,10 @@ const CharacterBoxes = props => {
 
     function onSaveCharacters() {
         logger.log('Saving stats', characters)
-        Storage.save('characters', characters)
+        Storage.save('characterBoxes', characters)
+        const names = characters.map(item => item.name)
+        Storage.save('characters', names)
+        Events.publish(Events.CharacterListSaved, names)
     }
 
     function onNewStat() {

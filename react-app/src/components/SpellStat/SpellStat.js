@@ -1,4 +1,4 @@
-import React, {useMemo, useState} from "react"
+import React, {useMemo} from "react"
 import './SpellStat.css'
 import Events from "../../models/Events";
 import Logger from "../Services/Logger";

@@ -1,7 +1,7 @@
 import React, {useState} from "react"
 import './PanelLeft.css'
 import DiceRoller from "../DiceRoller/DiceRoller"
-import CharacterSheetContainer from "../CharacterSheetContainer/CharacterSheetContainer"
+import CharacterSheet from "../CharacterSheet/CharacterSheet"
 import Events from "../../models/Events"
 import Constants from "../../models/Constants"
 import Logger from "../Services/Logger";
@@ -83,16 +83,16 @@ const PanelLeft = props => {
                 </select>
             </div>
 
-            <DiceRoller onRoll={onRoll} rolls={user.rolls}/>
+            <DiceRoller onRoll={onRoll} rolls={user.rolls} />
             {user.type === "player" ?
-                <CharacterSheetContainer/>
+                <CharacterSheet />
                 : null}
             <div className={'close'} onClick={togglePanel}>
                 <span className={'icon icon-close'}>{'<'}</span>
                 <span className={'icon icon-open'}>{'>'}</span>
             </div>
 
-            <Login user={user}/>
+            <Login user={user} />
         </div>
     )
 }

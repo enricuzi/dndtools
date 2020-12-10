@@ -6,6 +6,7 @@ const Events = {
     CharacterStats: 'CharacterStats',
     CharacterStatChange: 'CharacterStatChange',
     CharacterRemove: 'CharacterRemove',
+    CharacterListSaved: 'CharacterListSaved',
     FreeDrawColor: 'FreeDrawColor',
     FreeDrawMode: 'FreeDrawMode',
     FreeDrawLineWidth: 'FreeDrawLineWidth',

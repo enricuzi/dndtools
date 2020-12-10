@@ -10,3 +10,7 @@
 	width: 100%;
 	text-align: center;
 }
+
+.character-attribute label {
+	min-width: 60px;
+}
