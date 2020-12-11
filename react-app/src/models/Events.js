@@ -2,6 +2,13 @@ import {Subject} from "rxjs";
 
 const Events = {
     AttributeBonusChange: 'AttributeBonusChange',
+    AttributeStrengthBonusChanged: 'AttributeStrengthBonusChanged',
+    AttributeDexterityBonusChanged: 'AttributeDexterityBonusChanged',
+    AttributeConstitutionBonusChanged: 'AttributeConstitutionBonusChanged',
+    AttributeIntelligenceBonusChanged: 'AttributeIntelligenceBonusChanged',
+    AttributeWisdomBonusChanged: 'AttributeWisdomBonusChanged',
+    AttributeCharismaBonusChanged: 'AttributeCharismaBonusChanged',
+    ArmorChanged: 'ArmorChanged',
     ClearCanvas: 'ClearCanvas',
     CharacterStats: 'CharacterStats',
     CharacterStatChange: 'CharacterStatChange',
@@ -11,6 +18,8 @@ const Events = {
     FreeDrawMode: 'FreeDrawMode',
     FreeDrawLineWidth: 'FreeDrawLineWidth',
     FreeDrawSelected: 'FreeDrawSelected',
+    HealthChanged: 'HealthChanged',
+    LevelChanged: 'LevelChanged',
     LogIn: 'LogIn',
     LogOut: 'LogOut',
     MonsterStatChange: 'MonsterStatChange',

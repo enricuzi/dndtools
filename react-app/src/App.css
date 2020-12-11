@@ -14,6 +14,10 @@ select {
 	border-radius: 5px;
 }
 
+input[type='number'] {
+	text-align: center;
+}
+
 fieldset {
 	display: flex;
 	flex-direction: column;
@@ -35,6 +39,7 @@ fieldset fieldset fieldset legend {
 
 [contenteditable] {
 	background-color: aliceblue;
+	line-height: 2;
 }
 
 .action-buttons {
@@ -69,6 +74,10 @@ button.clear {
 	display: flex;
 	flex-direction: column;
 	flex: 1;
+}
+
+.text-center {
+	text-align: center;
 }
 
 .green {

@@ -1,12 +1,12 @@
 import React, {useState} from "react"
 import './PanelCenter.css'
-import FreeDraw from "../FreeDraw/FreeDraw"
-import NoteSection from "../NoteSection/NoteSection"
+import FreeDraw from "./FreeDraw/FreeDraw"
+import NoteSection from "./NoteSection/NoteSection"
 import Constants from "../../models/Constants";
 import Events from "../../models/Events";
-import MapLayer from "../MapLayer/MapLayer";
-import Battle from "../Battle/Battle";
-import CharacterSheets from "../CharacterSheets/CharacterSheets";
+import MapLayer from "./MapLayer/MapLayer";
+import Index from "../QuickView";
+import SheetContainer from "./SheetContainer/SheetContainer";
 
 const PanelCenter = props => {
 
@@ -28,14 +28,14 @@ const PanelCenter = props => {
                 <div className={"master-tools"}>
                     {masterTool === Constants.Tool.FREE_DRAW ? <FreeDraw /> :
                         masterTool === Constants.Tool.UPLOAD_IMAGE ? <MapLayer image={sourceImage} alt={sourceAlt} /> :
-                            masterTool === Constants.Tool.CHARACTER_STATS ? <Battle /> : null}
+                            masterTool === Constants.Tool.CHARACTER_STATS ? <Index /> : null}
                 </div>
                 : user.type === Constants.User.PLAYER ?
                     <div className={"player-tools"}>
                         <FreeDraw />
                     </div>
                     : null}
-            <CharacterSheets />
+            <SheetContainer />
             <NoteSection />
         </div>
     )

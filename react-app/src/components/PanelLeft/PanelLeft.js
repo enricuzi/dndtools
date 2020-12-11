@@ -1,12 +1,12 @@
 import React, {useState} from "react"
 import './PanelLeft.css'
-import DiceRoller from "../DiceRoller/DiceRoller"
-import CharacterSheet from "../CharacterSheet/CharacterSheet"
+import DiceRoller from "./DiceRoller/DiceRoller"
+import Index from "../Sheet"
 import Events from "../../models/Events"
 import Constants from "../../models/Constants"
 import Logger from "../Services/Logger";
 import Login from "../Login/Login";
-import UploadFileButton from "../UploadFileButton/UploadFileButton";
+import UploadFileButton from "./UploadFileButton/UploadFileButton";
 
 const PanelLeft = props => {
 
@@ -85,7 +85,7 @@ const PanelLeft = props => {
 
             <DiceRoller onRoll={onRoll} rolls={user.rolls} />
             {user.type === "player" ?
-                <CharacterSheet />
+                <Index />
                 : null}
             <div className={'close'} onClick={togglePanel}>
                 <span className={'icon icon-close'}>{'<'}</span>

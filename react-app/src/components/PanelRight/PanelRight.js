@@ -1,6 +1,6 @@
 import React, {Component} from "react"
 import './PanelRight.css'
-import UserSection from "../UserSection/UserSection"
+import UserSection from "./UserSection/UserSection"
 
 export default class PanelRight extends Component {
 
