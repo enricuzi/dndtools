@@ -77,6 +77,18 @@ button.clear {
 	flex: 1;
 }
 
+.collapsed {
+	overflow: hidden;
+	max-height: 0;
+}
+
+.toggle {
+	position: absolute;
+	right: 5px;
+	top: 24px;
+	cursor: pointer;
+}
+
 .text-center {
 	text-align: center;
 }

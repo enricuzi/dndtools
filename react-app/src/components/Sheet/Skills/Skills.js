@@ -1,4 +1,5 @@
 import React, {useCallback, useEffect, useMemo, useState} from 'react';
+import './Skills.css'
 import Storage from "../../Services/Storage";
 import Skill from "../Skill/Skill";
 import Logger from "../../Services/Logger";
@@ -41,7 +42,7 @@ const Skills = props => {
     }
 
     return (
-        <fieldset className={'skills'}>
+        <fieldset className={'skill-stats'}>
             <legend>Skills</legend>
             {
                 list && list.map((item, index) => <Skill key={index} data={item} />)

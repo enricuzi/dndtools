@@ -1,1 +1,6 @@
-.spell-stat {}
+.spell-stat {
+    position: relative;
+}
+
+.spell-stat .collapsed {
+}

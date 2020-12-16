@@ -1,4 +1,5 @@
 import React, {useCallback, useEffect, useMemo, useState} from "react";
+import './Weapons.css'
 import Events from "../../../models/Events";
 import Weapon from "../Weapon/Weapon";
 import Logger from "../../Services/Logger";
@@ -41,7 +42,7 @@ const Weapons = props => {
     }
 
     return (
-        <fieldset className={'weapon-container'}>
+        <fieldset className={'weapon-stats'}>
             <legend>Weapons</legend>
             {
                 list && list.map((item, index) => <Weapon key={index} index={index} data={item} />)

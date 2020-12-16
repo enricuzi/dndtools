@@ -1,4 +1,5 @@
 import React, {useCallback, useEffect, useMemo, useState} from "react"
+import './Spells.css'
 import Events from "../../../models/Events";
 import Logger from "../../Services/Logger";
 import Spell from "../Spell/Spell";

@@ -18,6 +18,7 @@ const Weapon = props => {
     ], [])
     const {index} = props
     const [data, setData] = useState(props.data)
+    const [collapse, setCollapse] = useState('collapsed')
     const targetRef = useRef(null)
     let timer = useRef(0)
 
@@ -86,22 +87,29 @@ const Weapon = props => {
         Utils.setCursor(e.target)
     }
 
+    function toggleContent() {
+        setCollapse(collapse ? '' : 'collapsed')
+    }
+
     return (
         <fieldset className={'weapon-stat'}>
             <legend contentEditable={true} suppressContentEditableWarning={true} onInput={setName} onFocus={onFocus}>{data.name}</legend>
-            <label>Damage</label>
-            <span contentEditable={true} suppressContentEditableWarning={true} onInput={setDamage} onFocus={onFocus}>{data.damage}</span>
-            <label>Bonus</label>
-            <span contentEditable={true} suppressContentEditableWarning={true} onInput={setBonus} onFocus={onFocus}>{data.bonus}</span>
-            <label>Attribute</label>
-            <select onChange={setAttribute} value={data.attribute} data-attr={'attribute'}>
-                {
-                    attributes.map((attribute, index) => <option key={index} value={attribute}>{attribute}</option>)
-                }
-            </select>
-            <div className={'action-buttons'}>
-                <button className={'clear'} onClick={remove}>Remove</button>
+            <div className={`column ${collapse}`}>
+                <label>Damage</label>
+                <span contentEditable={true} suppressContentEditableWarning={true} onInput={setDamage} onFocus={onFocus}>{data.damage}</span>
+                <label>Bonus</label>
+                <span contentEditable={true} suppressContentEditableWarning={true} onInput={setBonus} onFocus={onFocus}>{data.bonus}</span>
+                <label>Attribute</label>
+                <select onChange={setAttribute} value={data.attribute} data-attr={'attribute'}>
+                    {
+                        attributes.map((attribute, index) => <option key={index} value={attribute}>{attribute}</option>)
+                    }
+                </select>
+                <div className={'action-buttons'}>
+                    <button className={'clear'} onClick={remove}>Remove</button>
+                </div>
             </div>
+            <span className={'toggle'} onClick={toggleContent}>{collapse ? '>' : '<'}</span>
         </fieldset>
     )
 }

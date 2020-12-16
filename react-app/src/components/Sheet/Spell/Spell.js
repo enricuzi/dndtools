@@ -9,6 +9,7 @@ const Spell = props => {
     const logger = useMemo(() => new Logger('Spell'), [])
     const {index} = props
     const [data, setData] = useState(props.data)
+    const [collapse, setCollapse] = useState('collapsed')
     const targetRef = useRef(null)
     const timer = useRef(0)
 
@@ -77,18 +78,25 @@ const Spell = props => {
         Utils.setCursor(e.target)
     }
 
+    function toggleContent() {
+        setCollapse(collapse ? '' : 'collapsed')
+    }
+
     return (
         <fieldset className={'spell-stat'}>
             <legend contentEditable={true} suppressContentEditableWarning={true} onInput={setName} onFocus={onFocus}>{data.name}</legend>
-            <label>Damage</label>
-            <span contentEditable={true} suppressContentEditableWarning={true} onInput={setDamage} onFocus={onFocus}>{data.damage}</span>
-            <label>Target</label>
-            <span contentEditable={true} suppressContentEditableWarning={true} onInput={setTarget} onFocus={onFocus}>{data.target}</span>
-            <label>Description</label>
-            <textarea rows={5} value={data.description} onChange={setDescription} />
-            <div className={'action-buttons'}>
-                <button className={'clear'} onClick={remove}>Remove</button>
+            <div className={`column ${collapse}`}>
+                <label>Damage</label>
+                <span contentEditable={true} suppressContentEditableWarning={true} onInput={setDamage} onFocus={onFocus}>{data.damage}</span>
+                <label>Target</label>
+                <span contentEditable={true} suppressContentEditableWarning={true} onInput={setTarget} onFocus={onFocus}>{data.target}</span>
+                <label>Description</label>
+                <textarea rows={5} value={data.description} onChange={setDescription} />
+                <div className={'action-buttons'}>
+                    <button className={'clear'} onClick={remove}>Remove</button>
+                </div>
             </div>
+            <span className={'toggle'} onClick={toggleContent}>{collapse ? '>' : '<'}</span>
         </fieldset>
     )
 }
