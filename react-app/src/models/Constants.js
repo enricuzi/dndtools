@@ -30,6 +30,13 @@ const Constants = {
         WISDOM: 'wisdom',
         CHARISMA: 'charisma'
     },
+    Storage: {
+        ATTRIBUTES: 'attributes',
+        CHARACTERS: 'characters',
+        WEAPONS: 'weapons',
+        SPELLS: 'spells',
+        FEATURES: 'features'
+    },
 }
 
 export default Constants

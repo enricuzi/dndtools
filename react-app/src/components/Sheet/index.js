@@ -6,6 +6,7 @@ import Spells from "./Spells/Spells";
 import Level from "./Level/Level";
 import Armor from "./Armor/Armor";
 import Health from "./Health/Health";
+import Skills from "./Skills/Skills";
 
 const Index = props => {
 
@@ -17,19 +18,21 @@ const Index = props => {
                 <legend>{character}</legend>
                 <div className={'row'}>
                     <div className={'column'}>
-                        <Level/>
+                        <Attributes character={character} />
                     </div>
                     <div className={'column'}>
-                        <Armor/>
-                    </div>
-                    <div className={'column'}>
-                        <Health/>
+                        <div className={'row'}>
+                            <Level/>
+                        </div>
+                        <div className={'row'}>
+                            <Armor/>
+                        </div>
+                        <div className={'row'}>
+                            <Health/>
+                        </div>
                     </div>
                 </div>
                 <div className={'row'}>
-                    <div className={'column'}>
-                        <Attributes character={character} />
-                    </div>
                     <div className={'column'}>
                         <div className={'row'}>
                             <Weapons character={character} />
@@ -38,6 +41,11 @@ const Index = props => {
                     <div className={'column'}>
                         <div className={'row'}>
                             <Spells character={character} />
+                        </div>
+                    </div>
+                    <div className={'column'}>
+                        <div className={'row'}>
+                            <Skills character={character} />
                         </div>
                     </div>
                 </div>

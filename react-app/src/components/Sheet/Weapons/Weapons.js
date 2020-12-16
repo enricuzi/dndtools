@@ -1,40 +1,53 @@
-import React, {useEffect, useMemo, useState} from "react";
+import React, {useCallback, useEffect, useMemo, useState} from "react";
 import Events from "../../../models/Events";
 import Weapon from "../Weapon/Weapon";
 import Logger from "../../Services/Logger";
+import Storage from "../../Services/Storage";
+import Constants from "../../../models/Constants";
 
 const Weapons = props => {
 
-    const [weapons, setWeapons] = useState([])
     const logger = useMemo(() => new Logger('Weapons'), [])
+    const {character} = props
+    const [list, setList] = useState(Storage.getFilteredItemOrDefault(Constants.Storage.WEAPONS, character, []))
+
+    const save = useCallback(data => {
+        Storage.saveFilteredItem(Constants.Storage.WEAPONS, character, data)
+    }, [character])
 
     useEffect(() => {
-        const observer = Events.onRemoveWeapon(value => {
-            logger.log('removing spell', value)
-            setWeapons(weapons.filter((item, index) => index !== value))
+        const saveObserver = Events.onSaveWeapon(weapon => {
+            const data = [...list]
+            data.splice(weapon.index, 1, weapon)
+            logger.log('saving weapons', data)
+            setList(data)
+            save(data);
         })
-        return () => observer.unsubscribe()
-    }, [logger, weapons])
+        return () => saveObserver.unsubscribe()
+    }, [logger, list, save])
 
-    function save() {
-        logger.log('saving weapons', weapons)
-        Events.publish(Events.SaveWeapon, weapons)
-    }
+    useEffect(() => {
+        const removeObserver = Events.onRemoveWeapon(value => {
+            logger.log('removing weapon', value)
+            const data = list.filter((item, index) => index !== value)
+            setList(data)
+            save(data);
+        })
+        return () => removeObserver.unsubscribe()
+    }, [logger, list, save])
 
     function addWeapon() {
-        setWeapons([...weapons, {}])
+        setList([...list, {}])
     }
 
     return (
         <fieldset className={'weapon-container'}>
             <legend>Weapons</legend>
             {
-                weapons.map((item, index) =>
-                    <Weapon key={index} index={index} />)
+                list && list.map((item, index) => <Weapon key={index} index={index} data={item} />)
             }
             <div className={'action-buttons'}>
                 <button onClick={addWeapon}>Add</button>
-                <button onClick={save} className={'save'}>Save</button>
             </div>
         </fieldset>
     )

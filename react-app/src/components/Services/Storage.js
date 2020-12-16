@@ -18,7 +18,11 @@ export default class Storage {
 		return JSON.parse(store.getItem(key))
 	}
 
-	static filterItem(key, filter, store) {
+	static getItemOrDefault(key, defaultValue, store) {
+		return this.getItem(key, store) || defaultValue
+	}
+
+	static getFilteredItem(key, filter, store) {
 		if (!this.contains(key)) {
 			return null
 		}
@@ -27,12 +31,15 @@ export default class Storage {
 		return item[filter]
 	}
 
-	static updateItem(key, filter, data, store) {
-		store = store || this.store;
-		if (!this.contains(key)) {
-			return null
+	static getFilteredItemOrDefault(key, filter, defaultValue, store) {
+		if (!this.contains(key, store)) {
+			return defaultValue
 		}
-		const item = this.getItem(key, store)
+		return this.getFilteredItem(key, filter, store) || defaultValue
+	}
+
+	static saveFilteredItem(key, filter, data, store) {
+		const item = this.getItem(key, store) || {}
 		item[filter] = data
 		this.save(key, item, store)
 	}

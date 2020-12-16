@@ -17,7 +17,7 @@ const Attributes = props => {
         {id: Constants.Attributes.WISDOM, label: "WIS"},
         {id: Constants.Attributes.CHARISMA, label: "CHA"},
     ], [])
-    const attributes = useMemo(() => Storage.filterItem('attributes', character) || {
+    const attributes = useMemo(() => Storage.getFilteredItem('attributes', character) || {
         [Constants.Attributes.STRENGTH]: {value: 10, extra: 0},
         [Constants.Attributes.DEXTERITY]: {value: 10, extra: 0},
         [Constants.Attributes.CONSTITUTION]: {value: 10, extra: 0},
@@ -37,7 +37,7 @@ const Attributes = props => {
                     extra: data.extra
                 }
                 logger.log('saving attributes', attributes)
-                Storage.updateItem('attributes', character, attributes)
+                Storage.saveFilteredItem('attributes', character, attributes)
             }
         })
         return () => {

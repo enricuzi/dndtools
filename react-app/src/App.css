@@ -34,6 +34,7 @@ fieldset fieldset legend {
 }
 
 fieldset fieldset fieldset legend {
+	text-transform: capitalize;
 	font-size: 20px;
 }
 

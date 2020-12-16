@@ -3,19 +3,25 @@ import Events from "../../../models/Events";
 import Index from "../../Sheet";
 import Logger from "../../Services/Logger";
 import Storage from "../../Services/Storage";
+import Constants from "../../../models/Constants";
 
 const SheetContainer = props => {
 
     const logger = useMemo(() => new Logger('SheetContainer'), [])
-    const [characters, setCharacters] = useState(Storage.getItem('characters') || [])
+    const [characters, setCharacters] = useState(Storage.getItemOrDefault(Constants.Storage.CHARACTERS, []))
 
     useEffect(() => {
         [
-            'attributes',
-            'weapons',
-            'spells',
-        ].forEach(key => !Storage.contains(key) && Storage.save(key, {}))
-    }, [])
+            Constants.Storage.ATTRIBUTES,
+            Constants.Storage.WEAPONS,
+            Constants.Storage.SPELLS,
+            Constants.Storage.FEATURES
+        ].forEach(key => {
+            if (!Storage.contains(key)) {
+                characters.forEach(name => Storage.saveFilteredItem(key, name, []))
+            }
+        })
+    }, [characters])
 
     useEffect(() => {
         const observer = Events.onCharacterListSaved(data => {

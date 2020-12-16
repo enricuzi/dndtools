@@ -1,10 +1,10 @@
-import React, {useState} from 'react';
+import React from 'react';
 import './Health.css'
 import Events from "../../../models/Events";
 
 const Health = props => {
 
-    const [value, setValue] = useState(props.value)
+    const {value} = props
 
     function onChange(e) {
         const value = e.target.innerText
