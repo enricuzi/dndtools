@@ -11,14 +11,9 @@ const SheetContainer = props => {
     const [characters, setCharacters] = useState(Storage.getItemOrDefault(Constants.Storage.CHARACTERS, []))
 
     useEffect(() => {
-        [
-            Constants.Storage.ATTRIBUTES,
-            Constants.Storage.WEAPONS,
-            Constants.Storage.SPELLS,
-            Constants.Storage.FEATURES
-        ].forEach(key => {
+        Object.keys(Constants.Storage.Sheet).forEach(key => {
             if (!Storage.contains(key)) {
-                characters.forEach(name => Storage.saveFilteredItem(key, name, []))
+                characters.forEach(name => Storage.saveFilteredItem(Constants.Storage.Sheet[key], name, []))
             }
         })
     }, [characters])

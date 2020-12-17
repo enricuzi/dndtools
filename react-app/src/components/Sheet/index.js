@@ -23,11 +23,7 @@ const Index = props => {
                     <div className={'column'}>
                         <div className={'row'}>
                             <Level/>
-                        </div>
-                        <div className={'row'}>
                             <Armor/>
-                        </div>
-                        <div className={'row'}>
                             <Health/>
                         </div>
                     </div>

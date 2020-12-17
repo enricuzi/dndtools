@@ -1,16 +1,22 @@
 .character-attribute {
-	margin: 2px 0;
-	display: flex;
-	align-items: center;
+    margin: 2px 0;
+    display: flex;
+    align-items: center;
 }
 
 .character-attribute input,
 .character-attribute span,
 .character-attribute label {
-	width: 100%;
-	text-align: center;
+    width: 100%;
+    text-align: center;
+}
+
+.character-attribute input {
+    min-width: 70px;
 }
 
 .character-attribute label {
-	min-width: 60px;
+    min-width: 50px;
+    text-transform: capitalize;
+    text-align: left;
 }

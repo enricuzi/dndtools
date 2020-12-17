@@ -10,17 +10,17 @@ const Skills = props => {
 
     const logger = useMemo(() => new Logger('Skills'), [])
     const {character} = props
-    const [list, setList] = useState(Storage.getFilteredItemOrDefault('features', character, []))
+    const [list, setList] = useState(Storage.getFilteredItemOrDefault(Constants.Storage.Sheet.SKILLS, character, []))
 
     const save = useCallback(data => {
-        Storage.saveFilteredItem(Constants.Storage.FEATURES, character, data)
+        Storage.saveFilteredItem(Constants.Storage.Sheet.SKILLS, character, data)
     }, [character])
 
     useEffect(() => {
         const saveObserver = Events.onSaveSkill(item => {
             const data = [...list]
             data.splice(item.index, 1, item)
-            logger.log('saving skill', data)
+            logger.log('received saving skill', data)
             setList(data)
             save(data)
         })
@@ -45,7 +45,7 @@ const Skills = props => {
         <fieldset className={'skill-stats'}>
             <legend>Skills</legend>
             {
-                list && list.map((item, index) => <Skill key={index} data={item} />)
+                list && list.map((item, index) => <Skill key={index} index={index} data={item} />)
             }
             <div className={'action-buttons'}>
                 <button onClick={newItem}>Add</button>

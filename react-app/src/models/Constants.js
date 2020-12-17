@@ -31,11 +31,15 @@ const Constants = {
         CHARISMA: 'charisma'
     },
     Storage: {
-        ATTRIBUTES: 'attributes',
         CHARACTERS: 'characters',
-        WEAPONS: 'weapons',
-        SPELLS: 'spells',
-        FEATURES: 'features'
+        CHARACTER_BOXES: 'characterBoxes',
+        Sheet: {
+            ATTRIBUTES: 'attributes',
+            WEAPONS: 'weapons',
+            SPELLS: 'spells',
+            FEATURES: 'features',
+            SKILLS: 'skills',
+        }
     },
 }
 

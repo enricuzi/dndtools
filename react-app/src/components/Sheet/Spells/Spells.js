@@ -10,10 +10,10 @@ const Spells = props => {
 
     const logger = useMemo(() => new Logger('Spells'), [])
     const {character} = props
-    const [list, setList] = useState(Storage.getFilteredItemOrDefault(Constants.Storage.SPELLS, character, []))
+    const [list, setList] = useState(Storage.getFilteredItemOrDefault(Constants.Storage.Sheet.SPELLS, character, []))
 
     const save = useCallback(data => {
-        Storage.saveFilteredItem(Constants.Storage.SPELLS, character, data)
+        Storage.saveFilteredItem(Constants.Storage.Sheet.SPELLS, character, data)
     }, [character])
 
     useEffect(() => {

@@ -49,6 +49,22 @@ export default class Storage {
 		store.setItem(key, JSON.stringify(value))
 	}
 
+	static removeFilteredItem(key, filter, store) {
+		const item = this.getItem(key, store)
+		if (item) {
+			delete item[filter]
+			this.save(item)
+		}
+	}
+
+	static removeIndexItem(key, index, store) {
+		const item = this.getItem(key, store)
+		if (item) {
+			item.splice(index, 1)
+			this.save(key, item)
+		}
+	}
+
 	static remove(key, store) {
 		store = store || this.store;
 		store.removeItem(key)

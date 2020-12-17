@@ -1,4 +1,4 @@
-import React, {useEffect, useMemo} from "react";
+import React, {useEffect, useMemo, useState} from "react";
 import Constants from "../../../models/Constants";
 import Attribute from "../Attribute/Attribute";
 import Storage from "../../Services/Storage";
@@ -9,22 +9,20 @@ const Attributes = props => {
 
     const logger = useMemo(() => new Logger('Attributes'), [])
     const {character} = props
-    const labels = useMemo(() => [
-        {id: Constants.Attributes.STRENGTH, label: "STR"},
-        {id: Constants.Attributes.DEXTERITY, label: "DEX"},
-        {id: Constants.Attributes.CONSTITUTION, label: "CON"},
-        {id: Constants.Attributes.INTELLIGENCE, label: "INT"},
-        {id: Constants.Attributes.WISDOM, label: "WIS"},
-        {id: Constants.Attributes.CHARISMA, label: "CHA"},
-    ], [])
-    const attributes = useMemo(() => Storage.getFilteredItem('attributes', character) || {
-        [Constants.Attributes.STRENGTH]: {value: 10, extra: 0},
-        [Constants.Attributes.DEXTERITY]: {value: 10, extra: 0},
-        [Constants.Attributes.CONSTITUTION]: {value: 10, extra: 0},
-        [Constants.Attributes.INTELLIGENCE]: {value: 10, extra: 0},
-        [Constants.Attributes.WISDOM]: {value: 10, extra: 0},
-        [Constants.Attributes.CHARISMA]: {value: 10, extra: 0},
-    }, [character])
+    const [attributes, setAttributes] = useState(Storage.getFilteredItem('attributes', character))
+
+    useEffect(() => {
+        if (!attributes.length) {
+            setAttributes({
+                [Constants.Attributes.STRENGTH]: {value: 10, extra: 0},
+                [Constants.Attributes.DEXTERITY]: {value: 10, extra: 0},
+                [Constants.Attributes.CONSTITUTION]: {value: 10, extra: 0},
+                [Constants.Attributes.INTELLIGENCE]: {value: 10, extra: 0},
+                [Constants.Attributes.WISDOM]: {value: 10, extra: 0},
+                [Constants.Attributes.CHARISMA]: {value: 10, extra: 0},
+            })
+        }
+    }, [])
 
     useEffect(() => {
         const observer = Events.onAttributeBonusChange(data => {
@@ -48,10 +46,10 @@ const Attributes = props => {
     return (
         <fieldset className={"character-attributes"}>
             <legend>Attributes</legend>
-            {labels.map((item, index) => {
-                const {id, label} = item;
-                const {value, extra} = attributes[id]
-                return <Attribute key={index} data={{id, label, value, extra}} />
+            {attributes && Object.keys(attributes).map((key, index) => {
+                const attribute = attributes[key]
+                const {value, extra} = attribute
+                return <Attribute key={index} data={{id: key, label: key.substr(0, 3), value, extra}} />
             })}
         </fieldset>
     )
