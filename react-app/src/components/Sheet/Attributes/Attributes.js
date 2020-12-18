@@ -12,7 +12,7 @@ const Attributes = props => {
     const [attributes, setAttributes] = useState(Storage.getFilteredItem('attributes', character))
 
     useEffect(() => {
-        if (!attributes.length) {
+        if (!attributes || !attributes.length) {
             setAttributes({
                 [Constants.Attributes.STRENGTH]: {value: 10, extra: 0},
                 [Constants.Attributes.DEXTERITY]: {value: 10, extra: 0},
